@@ -23,6 +23,19 @@ public class TimelineActivity extends Activity {
 		
 		Log.d("DEBUG", "onCreate in the TimelineActivity");
 		
+		//loadTweets();
+		
+	}
+
+	
+	protected void onResume(){
+		super.onResume();
+		
+		loadTweets();
+	}
+	
+	
+	public void loadTweets(){
 		MyTwitterApp.getRestClient().getTimeline(new JsonHttpResponseHandler(){
 			public void onSuccess(JSONArray jsonTweets){
 				Log.d("DEBUG", "onSuccess: Yay!");
@@ -39,7 +52,7 @@ public class TimelineActivity extends Activity {
 			}
 		});
 	}
-
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
