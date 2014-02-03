@@ -5,7 +5,7 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="10"
+        android:minSdkVersion="11"
         android:targetSdkVersion="18" />
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -50,6 +50,14 @@
         <activity
             android:name="com.example.twitterapp.ComposeActivity"
             android:label="@string/title_activity_compose"
+            android:parentActivityName="com.example.twitterapp.TimelineActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.twitterapp.TimelineActivity" />
+        </activity>
+        <activity
+            android:name="com.example.twitterapp.ProfileActivity"
+            android:label="@string/title_activity_profile"
             android:parentActivityName="com.example.twitterapp.TimelineActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

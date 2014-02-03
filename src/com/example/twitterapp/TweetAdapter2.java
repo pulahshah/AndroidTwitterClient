@@ -2,6 +2,8 @@ package com.example.twitterapp;
 
 import java.util.List;
 
+import org.json.JSONArray;
+
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import android.content.Context;
@@ -74,5 +76,10 @@ public class TweetAdapter2 extends BaseAdapter {
 	public void swapList(List<Tweet> newTweets) {
 		tweets = newTweets;
 		notifyDataSetChanged();
+	}
+
+	public void addAll(JSONArray jsonTweets) {
+		// TODO Auto-generated method stub
+		
 	}
 }
