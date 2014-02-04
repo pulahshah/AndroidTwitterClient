@@ -28,18 +28,25 @@ public final class R {
         public static final int ic_profile=0x7f020004;
     }
     public static final class id {
-        public static final int action_post_tweet=0x7f080007;
-        public static final int action_settings=0x7f080008;
-        public static final int compose_tweet=0x7f08000a;
+        public static final int action_post_tweet=0x7f08000e;
+        public static final int action_settings=0x7f08000f;
+        public static final int compose_tweet=0x7f080011;
         public static final int etComposeTweet=0x7f080000;
-        public static final int fl_container=0x7f080002;
-        public static final int fragmentUserTimeline=0x7f080001;
-        public static final int ivProfileImage=0x7f080004;
-        public static final int lvTweets=0x7f080003;
-        public static final int profile=0x7f08000b;
-        public static final int refresh_tweets=0x7f080009;
-        public static final int tvBody=0x7f080006;
-        public static final int tvName=0x7f080005;
+        public static final int fl_container=0x7f080009;
+        public static final int fragmentUserTimeline=0x7f080008;
+        public static final int ivProfileIm=0x7f080002;
+        public static final int ivProfileImage=0x7f08000b;
+        public static final int llFollow=0x7f080005;
+        public static final int lvTweets=0x7f08000a;
+        public static final int profile=0x7f080012;
+        public static final int refresh_tweets=0x7f080010;
+        public static final int rlHeader=0x7f080001;
+        public static final int tvBody=0x7f08000d;
+        public static final int tvFollowers=0x7f080006;
+        public static final int tvFollowing=0x7f080007;
+        public static final int tvName=0x7f08000c;
+        public static final int tvScreenName=0x7f080004;
+        public static final int tvUserName=0x7f080003;
     }
     public static final class layout {
         public static final int activity_compose=0x7f030000;

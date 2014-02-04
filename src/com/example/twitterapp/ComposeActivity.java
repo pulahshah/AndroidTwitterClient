@@ -33,6 +33,7 @@ public class ComposeActivity extends Activity {
 	private void setupActionBar() {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			getActionBar().setDisplayHomeAsUpEnabled(true);
+			getActionBar().setTitle("Tweet");
 		}
 	}
 

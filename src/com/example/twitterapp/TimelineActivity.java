@@ -31,6 +31,7 @@ public class TimelineActivity extends FragmentActivity implements TabListener{
 		ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		actionBar.setDisplayShowTitleEnabled(true);
+		actionBar.setTitle("Twitter");
 		
 		Tab tabHome = actionBar.newTab().setText("Home").setTag("HomeTimelineFragment").setTabListener(this);
 		Tab tabMentions = actionBar.newTab().setText("Mentions").setTag("MentionsTimelineFragment").setTabListener(this);
