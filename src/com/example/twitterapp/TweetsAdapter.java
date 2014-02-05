@@ -39,9 +39,14 @@ public class TweetsAdapter extends ArrayAdapter<Tweet>{
 			@Override
 			public void onClick(View v) {
 				Intent i = new Intent(v.getContext(), ProfileActivity.class);
-				i.putExtra("id", tweet.getUser().getId());
-				i.putExtra("screenName", tweet.getUser().getScreenName());
-				v.getContext().startActivity(i);
+				
+				Log.d("DEBUG", "application context: " + v.getContext());
+				
+				if(v.getContext().getClass() != ProfileActivity.class){	// to prevent firing up new activities from profile activity
+					i.putExtra("id", tweet.getUser().getId());
+					i.putExtra("screenName", tweet.getUser().getScreenName());
+					v.getContext().startActivity(i);
+				}
 				
 				Log.d("DEBUG", "image clicked -- " + tweet.getUser().getId());
 			}
@@ -49,8 +54,8 @@ public class TweetsAdapter extends ArrayAdapter<Tweet>{
 		
 		TextView nameView = (TextView)view.findViewById(R.id.tvName);
 		String formatterName = "<b>" + tweet.getUser().getName() + "</b>"
-				+ " <small><font color='#777777'>"
-				+ tweet.getUser().getScreenName() + "</font></small>";
+				+ " <small><font color='#777777'>" 
+				+ "@" + tweet.getUser().getScreenName() + "</font></small>";
 
 		nameView.setText(Html.fromHtml(formatterName));
 

@@ -53,19 +53,29 @@ public class TwitterClient extends OAuthBaseClient {
     	client.get(url, null, handler);
     }
     
-    public void getUserInfo(AsyncHttpResponseHandler handler, String userId, String screenName){
+    public void getUserInfo(AsyncHttpResponseHandler handler, String screenName){
     	String url = getApiUrl("users/show.json");
+    	Log.d("DEBUG", "Firing GET getUserInfo: " + url);
     	RequestParams params = new RequestParams();
-    	params.put("user_id", userId);
-    	params.put("screen_name", screenName);
-    	client.get(url, null, handler);
+    	if(screenName != null){
+    		params.put("screen_name", screenName);
+    	}
+    	
+    	client.get(url, params, handler);
     }
     
-    public void getUserTimeline(AsyncHttpResponseHandler handler){
+    public void getUserTimeline(AsyncHttpResponseHandler handler, String screenName){
     	String url = getApiUrl("statuses/user_timeline.json");
-//    	RequestParams params = new RequestParams();
-//    	params.put("user_id", userId);
-    	client.get(url, null, handler);
+    	
+    	RequestParams params = new RequestParams();
+    	if(screenName != null){
+    		Log.d("@@@@@@@ Before firing timeline request: ", screenName);
+    		params.put("screen_name", screenName);
+    		client.get(url, params, handler);
+    	}
+    	else{
+    		client.get(url, null, handler);
+    	}
     }
     
     public void postTweet(Editable editable, AsyncHttpResponseHandler handler){

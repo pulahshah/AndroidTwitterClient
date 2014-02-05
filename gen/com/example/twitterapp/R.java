@@ -33,7 +33,7 @@ public final class R {
         public static final int compose_tweet=0x7f080011;
         public static final int etComposeTweet=0x7f080000;
         public static final int fl_container=0x7f080009;
-        public static final int fragmentUserTimeline=0x7f080008;
+        public static final int fl_userPlaceholder=0x7f080008;
         public static final int ivProfileIm=0x7f080002;
         public static final int ivProfileImage=0x7f08000b;
         public static final int llFollow=0x7f080005;

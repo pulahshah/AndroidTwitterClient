@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.twitterapp.fragments.UserTimelineFragment;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -18,8 +19,9 @@ public class ProfileActivity extends FragmentActivity {
 	
 	ImageView ivProfileIm;
 	TextView tvUserName, tvScreenName, tvFollowers, tvFollowing;
-	int id;
 	String userid, screenName;
+	
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -27,28 +29,61 @@ public class ProfileActivity extends FragmentActivity {
 		setContentView(R.layout.activity_profile);
 		
 		
+		screenName = getIntent().getStringExtra("screenName");
+		Log.d("DEBUG", "Profile Activity: Passed screen name --- " + screenName );
+		
 		
 		// Show the Up button in the action bar.
 		setupActionBar();
-		setupViews();
+		setupViews(screenName);
 		
+		
+		
+		
+		if(screenName == null){
+			getMyInfo();
+		}
+		else{
+			getUserInfo();
+		}
+		
+	}
+	
+	
+	private void getUserInfo() {
+		MyTwitterApp.getRestClient().getUserInfo(new JsonHttpResponseHandler(){
+			public void onSuccess(JSONObject obj){
+				User u2 = User.fromJson(obj);
+				getActionBar().setTitle("@" + u2.getScreenName());
+				Log.d("DEBUG", "#############################  --- " + u2.getScreenName());
+				
+				ImageLoader.getInstance().displayImage(u2.getProfileImageUrl(), ivProfileIm);
+				tvUserName.setText(u2.getName());
+				tvScreenName.setText(u2.getTagline());
+				tvFollowers.setText("" + u2.getFollowersCount() + " Followers");
+				tvFollowing.setText("" + u2.getFriendsCount() + " Following");
+				
+			}
+		}, screenName);
+		
+	}
+
+	private void getMyInfo() {
 		MyTwitterApp.getRestClient().getMyInfo(new JsonHttpResponseHandler(){
 			public void onSuccess(JSONObject obj){
-				User u = User.fromJson(obj);
-				getActionBar().setTitle("@" + u.getScreenName());
+				User u2 = User.fromJson(obj);
+				getActionBar().setTitle("@" + u2.getScreenName());
+				Log.d("DEBUG", "#############################  --- " + u2.getScreenName());
 				
-				Log.d("DEBUG", u.getName());
-				
-				//ImageLoader.getInstance().displayImage(tweet.getUser().getProfileImageUrl(), imageView);
-				ImageLoader.getInstance().displayImage(u.getProfileImageUrl(), ivProfileIm);
-				tvUserName.setText(u.getName());
-				tvScreenName.setText(u.getTagline());
-				tvFollowers.setText("" + u.getFollowersCount() + " Followers");
-				tvFollowing.setText("" + u.getFriendsCount() + " Following");
+				ImageLoader.getInstance().displayImage(u2.getProfileImageUrl(), ivProfileIm);
+				tvUserName.setText(u2.getName());
+				tvScreenName.setText(u2.getTagline());
+				tvFollowers.setText("" + u2.getFollowersCount() + " Followers");
+				tvFollowing.setText("" + u2.getFriendsCount() + " Following");
 			}
 		});
 	}
-	
+
 	public static int safeLongToInt(long l) {
 	    if (l < Integer.MIN_VALUE || l > Integer.MAX_VALUE) {
 	        throw new IllegalArgumentException
@@ -57,12 +92,18 @@ public class ProfileActivity extends FragmentActivity {
 	    return (int) l;
 	}
 	
-	public void setupViews(){
+	public void setupViews(String str){
 		ivProfileIm = (ImageView) findViewById(R.id.ivProfileIm);
 		tvUserName = (TextView) findViewById(R.id.tvUserName);
 		tvScreenName = (TextView) findViewById(R.id.tvScreenName);
 		tvFollowers = (TextView) findViewById(R.id.tvFollowers);
 		tvFollowing = (TextView) findViewById(R.id.tvFollowing);
+		
+		android.support.v4.app.FragmentManager manager = getSupportFragmentManager();
+		android.support.v4.app.FragmentTransaction fts = manager.beginTransaction();
+		fts.replace(R.id.fl_userPlaceholder, UserTimelineFragment.newInstance(str));
+        fts.commit();
+
 	}
 
 	/**
