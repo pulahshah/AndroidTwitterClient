@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.twitterapp"
+    package="com.psapp.worldcupapp"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -9,60 +9,70 @@
         android:targetSdkVersion="18" />
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!--
+       <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    
+    <permission
+        android:name="com.psapp.worldcupapp.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
 
+    <uses-permission android:name="com.psapp.worldcupapp.permission.C2D_MESSAGE" />
+    -->
     <application
-        android:name="com.example.twitterapp.MyTwitterApp"
+        android:name="android.app.Application"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        <meta-data
-            android:name="AA_DB_NAME"
-            android:value="RestClient.db" />
-        <meta-data
-            android:name="AA_DB_VERSION"
-            android:value="1" />
-
-        <activity
-            android:name="com.example.twitterapp.LoginActivity"
-            android:label="@string/app_name" >
+        <activity android:name="com.psapp.worldcupapp.MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="com.psapp.worldcupapp.ProfileActivity"
+            android:parentActivityName="com.psapp.worldcupapp.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.psapp.worldcupapp.MainActivity" />
+        </activity>
+        <activity
+            android:name="com.psapp.worldcupapp.ScoreDetailActivity"
+            android:label="@string/title_activity_score_detail"
+            android:parentActivityName="com.psapp.worldcupapp.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.psapp.worldcupapp.MainActivity" />
+        </activity>
+        <!--
+        <service android:name="com.parse.PushService" />
+
+        <receiver android:name="com.parse.ParseBroadcastReceiver" >
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="mytwitterapp"
-                    android:scheme="oauth" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.USER_PRESENT" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name="com.example.twitterapp.TimelineActivity"
-            android:label="@string/title_activity_timeline" >
-        </activity>
-        <activity
-            android:name="com.example.twitterapp.ComposeActivity"
-            android:label="@string/title_activity_compose"
-            android:parentActivityName="com.example.twitterapp.TimelineActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.twitterapp.TimelineActivity" />
-        </activity>
-        <activity
-            android:name="com.example.twitterapp.ProfileActivity"
-            android:label="@string/title_activity_profile"
-            android:parentActivityName="com.example.twitterapp.TimelineActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.twitterapp.TimelineActivity" />
-        </activity>
+        </receiver>
+        <receiver
+            android:name="com.parse.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+
+                <category android:name="com.psapp.worldcupapp" />
+            </intent-filter>
+        </receiver>
+        -->
+        
     </application>
 
 </manifest>

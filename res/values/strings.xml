@@ -13,5 +13,6 @@
     <string name="title_activity_compose">ComposeActivity</string>
     <string name="action_profile">Profile</string>
     <string name="title_activity_profile">Profile</string>
+    <string name="title_activity_score_detail">Score</string>
 
 </resources>
