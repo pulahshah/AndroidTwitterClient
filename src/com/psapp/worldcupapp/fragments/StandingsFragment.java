@@ -8,11 +8,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class StatsFragment extends Fragment {
+public class StandingsFragment extends Fragment {
 	
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceBundle){
-		View view = inflater.inflate(R.layout.fragment_scores_list, container, false);
+		View view = inflater.inflate(R.layout.fragment_standings, container, false);
 		return view;
+	}
+	
+	
+	public static StandingsFragment newInstance(String str){
+		StandingsFragment sf = new StandingsFragment();
+		Bundle b = new Bundle();
+		b.putString("msg", str);
+		sf.setArguments(b);
+		return sf;
 	}
 }

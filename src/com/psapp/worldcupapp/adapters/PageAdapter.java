@@ -2,11 +2,13 @@ package com.psapp.worldcupapp.adapters;
 
 import com.psapp.worldcupapp.fragments.LiveScoreFragment;
 import com.psapp.worldcupapp.fragments.NewsFragment;
-import com.psapp.worldcupapp.fragments.StatsFragment;
+import com.psapp.worldcupapp.fragments.ResultsFragment;
+import com.psapp.worldcupapp.fragments.StandingsFragment;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.util.Log;
 
 public class PageAdapter extends FragmentPagerAdapter{
 
@@ -18,11 +20,14 @@ public class PageAdapter extends FragmentPagerAdapter{
 	public Fragment getItem(int arg0) {
 		switch(arg0){
 		case 0:
-			return new LiveScoreFragment();
+			return LiveScoreFragment.newInstance("Live Score");
 		case 1:
-			return new NewsFragment();
+			return ResultsFragment.newInstance("Results");
 		case 2:
-			return new StatsFragment();
+			return StandingsFragment.newInstance("Standings");
+		case 3:
+			return NewsFragment.newInstance("News");
+		
 		default:
 			return null;
 		}
@@ -31,7 +36,7 @@ public class PageAdapter extends FragmentPagerAdapter{
 	@Override
 	public int getCount() {
 		// TODO 
-		return 3;
+		return 4;
 	}
 
 }

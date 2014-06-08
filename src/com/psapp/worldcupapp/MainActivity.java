@@ -20,27 +20,29 @@ import com.parse.PushService;
 
 import com.psapp.worldcupapp.adapters.PageAdapter;
 import com.psapp.worldcupapp.client.FootballClient;
+import com.psapp.worldcupapp.fragments.LiveScoreFragment;
+import com.psapp.worldcupapp.fragments.NewsFragment;
+import com.psapp.worldcupapp.fragments.ResultsFragment;
+import com.psapp.worldcupapp.fragments.StandingsFragment;
 
 import de.keyboardsurfer.android.widget.crouton.Configuration;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 
-public class MainActivity extends FragmentActivity implements TabListener {
+public class MainActivity extends FragmentActivity{
 	private ViewPager vPager;
 	private PageAdapter pageAdapter;
 	private ActionBar actionBar;
 	private Crouton crouton;
 	
-	private FootballClient fc;
-	
 	private boolean isConnected;
-	private String[] tabs = { "Live Scores", "News", "Stats" };
+	private String[] tabs = { "Live", "Results", "Standings", "News" };
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
-		
+		setupTabs();
 		
 //		Parse.initialize(this, "UyBnXScZ9pB5z2aBDIzU57rh6smKbmGijjWICdzB", "konQzSGmn8EkI4VRlCZGPNzSC2xMM4eaa0o4um6g");
 		
@@ -56,33 +58,33 @@ public class MainActivity extends FragmentActivity implements TabListener {
 //		testObject.put("foo", "bar");
 //		testObject.saveInBackground();
 		
-		vPager = (ViewPager) findViewById(R.id.vpPager);
-		pageAdapter = new PageAdapter(getSupportFragmentManager());
+//		vPager = (ViewPager) findViewById(R.id.vpPager);
+//		pageAdapter = new PageAdapter(getSupportFragmentManager());
 		actionBar = getActionBar();
 		
-		vPager.setAdapter(pageAdapter);
+//		vPager.setAdapter(pageAdapter);
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		
-		for (String tab_name : tabs) {
-            actionBar.addTab(actionBar.newTab().setText(tab_name)
-                    .setTabListener(this));
-        }
-		
-		vPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-			 
-		    @Override
-		    public void onPageSelected(int position) {
-		        actionBar.setSelectedNavigationItem(position);
-		    }
-		 
-		    @Override
-		    public void onPageScrolled(int arg0, float arg1, int arg2) {
-		    }
-		 
-		    @Override
-		    public void onPageScrollStateChanged(int arg0) {
-		    }
-		});
+//		for (String tab_name : tabs) {
+//            actionBar.addTab(actionBar.newTab().setText(tab_name)
+//                    .setTabListener(this));
+//        }
+//		
+//		vPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+//			 
+//		    @Override
+//		    public void onPageSelected(int position) {
+//		        actionBar.setSelectedNavigationItem(position);
+//		    }
+//		 
+//		    @Override
+//		    public void onPageScrolled(int arg0, float arg1, int arg2) {
+//		    }
+//		 
+//		    @Override
+//		    public void onPageScrollStateChanged(int arg0) {
+//		    }
+//		});
 		
 		
 	}
@@ -121,24 +123,55 @@ public class MainActivity extends FragmentActivity implements TabListener {
 	}
 
 
-	@Override
-	public void onTabReselected(Tab tab, FragmentTransaction ft) {
-		
-	}
+	private void setupTabs() {
+        ActionBar actionBar = getActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        actionBar.setDisplayShowTitleEnabled(true);
 
+        Tab tab1 = actionBar
+            .newTab()
+            .setText("Live")
+            .setTag("LiveScoreFragment")
+            .setTabListener(
+                new FragmentTabListener<LiveScoreFragment>(R.id.flContainer, this, "Live",
+                                LiveScoreFragment.class));
 
-	@Override
-	public void onTabSelected(Tab tab, FragmentTransaction ft) {
-		vPager.setCurrentItem(tab.getPosition());
-		
-	}
+        actionBar.addTab(tab1);
+        actionBar.selectTab(tab1);
 
+        Tab tab2 = actionBar
+            .newTab()
+            .setText("Results")
+//            .setIcon(R.drawable.ic_mentions)
+            .setTag("ResultsFragment")
+            .setTabListener(
+                new FragmentTabListener<ResultsFragment>(R.id.flContainer, this, "Results",
+                                ResultsFragment.class));
 
-	@Override
-	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-		// TODO Auto-generated method stub
-		
-	}
+        actionBar.addTab(tab2);
+        
+        Tab tab3 = actionBar
+                .newTab()
+                .setText("Standings")
+//                .setIcon(R.drawable.ic_mentions)
+                .setTag("StandingsFragment")
+                .setTabListener(
+                    new FragmentTabListener<StandingsFragment>(R.id.flContainer, this, "Standings",
+                                    StandingsFragment.class));
+
+            actionBar.addTab(tab3);
+            
+            Tab tab4 = actionBar
+                    .newTab()
+                    .setText("News")
+//                    .setIcon(R.drawable.ic_mentions)
+                    .setTag("NewsFragment")
+                    .setTabListener(
+                        new FragmentTabListener<NewsFragment>(R.id.flContainer, this, "News",
+                                        NewsFragment.class));
+
+                actionBar.addTab(tab4);
+    }
 	
 	
 	

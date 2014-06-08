@@ -11,7 +11,15 @@ import android.os.Bundle;
 public class NewsFragment extends Fragment {
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceBundle){
-		View view = inflater.inflate(R.layout.fragment_scores_list, container, false);
+		View view = inflater.inflate(R.layout.fragment_news, container, false);
 		return view;
+	}
+	
+	public static NewsFragment newInstance(String str){
+		NewsFragment nf = new NewsFragment();
+		Bundle b = new Bundle();
+		b.putString("msg", str);
+		nf.setArguments(b);
+		return nf;
 	}
 }

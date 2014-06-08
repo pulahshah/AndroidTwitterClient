@@ -1,29 +1,39 @@
 package com.psapp.worldcupapp.models;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.TimeZone;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.util.Log;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class Score {
-	private String body;
-	private long uid;
 	private String homeTeam;
 	private String awayTeam;
-    private Integer homeScore;
-    private Integer awayScore;
-    private String time;
-
-    
-    public String getBody() {
-        return body;
-    }
-
-    public long getId() {
-        return uid;
-    }
+	private String homeScore;
+	private String awayScore;
+	private String time;
+	private String stadium;
+	
+	public Score() {
+		this.homeTeam = "";
+		this.awayTeam = "";
+		this.homeScore = "";
+		this.awayScore = "";
+		this.time = "";
+		this.stadium = "";
+	}
 
 	public String getHomeTeam() {
 		return homeTeam;
@@ -41,19 +51,19 @@ public class Score {
 		this.awayTeam = awayTeam;
 	}
 
-	public Integer getHomeScore() {
+	public String getHomeScore() {
 		return homeScore;
 	}
 
-	public void setHomeScore(Integer homeScore) {
+	public void setHomeScore(String homeScore) {
 		this.homeScore = homeScore;
 	}
 
-	public Integer getAwayScore() {
+	public String getAwayScore() {
 		return awayScore;
 	}
 
-	public void setAwayScore(Integer awayScore) {
+	public void setAwayScore(String awayScore) {
 		this.awayScore = awayScore;
 	}
 
@@ -64,43 +74,62 @@ public class Score {
 	public void setTime(String time) {
 		this.time = time;
 	}
-   
 
-    public static Score fromJson(JSONObject jsonObject) {
-        Score score = new Score();
-//        try {
-//        	tweet.body = jsonObject.getString("text");
-//        	tweet.uid = jsonObject.getLong("id");
-//        	tweet.favorited = jsonObject.getBoolean("favorited");
-//        	tweet.retweeted = jsonObject.getBoolean("retweeted");
-//            tweet.user = User.fromJson(jsonObject.getJSONObject("user"));
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-        return score;
-    }
+	public static Score fromJson(JSONObject jsonObject) {
+		Score score = new Score();
+		try {
+			if (jsonObject.has("HomeTeam")) {
+				score.homeTeam = jsonObject.getString("HomeTeam");
+			}
 
-    public static ArrayList<Score> fromJson(JSONArray jsonArray) {
-        ArrayList<Score> scores = new ArrayList<Score>(jsonArray.length());
+			if (jsonObject.has("AwayTeam")) {
+				score.awayTeam = jsonObject.getString("AwayTeam");
+			}
 
-        for (int i=0; i < jsonArray.length(); i++) {
-            JSONObject scoreJson = null;
-            try {
-                scoreJson = jsonArray.getJSONObject(i);
-            } catch (Exception e) {
-                e.printStackTrace();
-                continue;
-            }
+			if (jsonObject.has("Location")) {
+				score.stadium = jsonObject.getString("Location");
+			}
 
-            Score score = Score.fromJson(scoreJson);
-            if (score != null) {
-            	scores.add(score);
-            }
-        }
+			if (jsonObject.has("Date")) {
+				score.time = jsonObject.getString("Date");
+			}
 
-        return scores;
-    }
+		} catch (JSONException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return score;
+	}
 
+	public static ArrayList<Score> fromJson(JSONArray jsonArray) {
+		ArrayList<Score> scores = new ArrayList<Score>(jsonArray.length());
+		Log.d("DEBUG",
+				"Number of fixtures passed in fromJson: " + jsonArray.length());
+		for (int i = 0; i < jsonArray.length(); i++) {
+			JSONObject scoreJson = null;
+			try {
+				scoreJson = jsonArray.getJSONObject(i);
+			} catch (Exception e) {
+				e.printStackTrace();
+				continue;
+			}
+
+			Score score = Score.fromJson(scoreJson);
+
+			if (score != null) {
+				scores.add(score);
+			}
+		}
+
+		return scores;
+	}
+
+	public String getStadium() {
+		return stadium;
+	}
+
+	public void setStadium(String stadium) {
+		this.stadium = stadium;
+	}
 
 }
