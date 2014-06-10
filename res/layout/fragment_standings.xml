@@ -2,7 +2,16 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0000FF" >
+     >
 
-    
+    <ListView
+        android:id="@+id/lvStandings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:cacheColorHint="#00000000"
+        
+        >
+    </ListView>
 </RelativeLayout>
+<!-- android:divider="@null"
+		android:dividerHeight="0dp"  -->

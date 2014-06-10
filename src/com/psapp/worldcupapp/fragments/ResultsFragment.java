@@ -63,7 +63,6 @@ public class ResultsFragment extends Fragment {
 			public void onSuccess(String json) {
 				try {
 					JSONObject obj = new JSONObject(json);
-					Log.d("DEBUG", "historical \n" + obj.toString());
 					JSONArray resultsJson = new JSONArray();
 					Iterator<?> keys = obj.keys();
 					while (keys.hasNext()) {

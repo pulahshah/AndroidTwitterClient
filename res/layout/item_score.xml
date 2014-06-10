@@ -63,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="20dp"
-                android:src="@drawable/ic_brazil" />
+                android:src="@drawable/ic_brazil_256" />
 
             <TextView
                 android:id="@+id/tvHomeScore"
@@ -105,7 +105,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="20dp"
-                android:src="@drawable/ic_argentina" />
+                android:src="@drawable/ic_argentina_256" />
         </LinearLayout>
     </LinearLayout>
 
