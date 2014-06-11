@@ -1,9 +1,7 @@
 package com.psapp.worldcupapp.models;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.TimeZone;
 
 import org.json.JSONArray;
@@ -11,12 +9,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.util.Log;
-
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 public class Score {
 	private String homeTeam;
@@ -91,6 +83,12 @@ public class Score {
 			}
 
 			if (jsonObject.has("Date")) {
+				// 2014-06-13T08:00:00-08:00
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+				//sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+				//sdf.setTimeZone(TimeZone.getDefault());
+				//String formattedDate = sdf.format(jsonObject.getString("Date"));
+				
 				score.time = jsonObject.getString("Date");
 			}
 

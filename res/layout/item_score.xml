@@ -24,7 +24,10 @@
                 android:id="@+id/tvHomeName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="18sp" />
+                android:fontFamily="sans-serif"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textSize="22sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -39,7 +42,10 @@
                 android:id="@+id/tvAwayName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="18sp" />
+                android:fontFamily="sans-serif"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textSize="22sp" />
         </LinearLayout>
     </LinearLayout>
 
@@ -58,12 +64,11 @@
             android:orientation="horizontal" >
 
             <ImageView
-                android:id="@+id/homeIcon"
+                android:id="@+id/ivHomeIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginRight="20dp"
-                android:src="@drawable/ic_brazil_256" />
+                android:layout_marginRight="20dp" />
 
             <TextView
                 android:id="@+id/tvHomeScore"
@@ -83,7 +88,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="vs"
-                android:textSize="96sp" />
+                android:fontFamily="sans-serif-light"
+                android:textSize="48sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -100,12 +106,11 @@
                 android:textSize="96sp" />
 
             <ImageView
-                android:id="@+id/awayIcon"
+                android:id="@+id/ivAwayIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="20dp"
-                android:src="@drawable/ic_argentina_256" />
+                android:layout_marginLeft="20dp" />
         </LinearLayout>
     </LinearLayout>
 
@@ -113,23 +118,40 @@
         android:id="@+id/bottomrow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
+        
         android:orientation="horizontal" >
 		
-        <ImageView 
-        		android:id="@+id/ivLiveDot"
-        		android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/bottomleft"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/circle"    
-            />
-        
-        <TextView
-            android:id="@+id/tvLiveTime"
-            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/tvMatchLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:fontFamily="sans-serif-light"
+                android:gravity="left" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/bottomright"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="55&apos;" />
+            android:layout_weight="1"
+            
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/tvMatchTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right" />
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

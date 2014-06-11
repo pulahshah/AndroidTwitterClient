@@ -26,12 +26,27 @@ public class StandingsAdapter extends ArrayAdapter<Group>{
 	@Override
 	public View getView(int position, View view, ViewGroup parent) {
 		//View view = convertView;
+		view = null;
 		if (view == null) {
 			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			view = inflater.inflate(R.layout.item_standing, null);
+			if(position == 0 || position == 4 || position == 8 || 
+					position == 12 || position == 16 || position == 20 ||
+					position == 24 || position == 28){ 
+				view = inflater.inflate(R.layout.item_standing_header, null);
+			}
+			else{
+				view = inflater.inflate(R.layout.item_standing, null);
+			}
 		}
 
 		final Group standing = getItem(position);
+		
+		if(position == 0 || position == 4 || position == 8 || 
+				position == 12 || position == 16 || position == 20 ||
+				position == 24 || position == 28){ 
+			TextView tvGroupName = (TextView) view.findViewById(R.id.tvGroupName);
+			tvGroupName.setText(standing.getGroup());
+		}
 		
 		ImageView ivFlag = (ImageView) view.findViewById(R.id.ivSmallFlag);
 		ivFlag.setBackground(getFlag(standing.getTeam()));
