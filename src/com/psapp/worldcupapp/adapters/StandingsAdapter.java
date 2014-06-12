@@ -118,7 +118,7 @@ public class StandingsAdapter extends ArrayAdapter<Group>{
 		if(country.equals("Ivory Coast")){
 			return getContext().getResources().getDrawable(R.drawable.ic_ivorycoast_72);
 		}
-		if(country.equals("Columbia")){
+		if(country.equals("Colombia")){
 			return getContext().getResources().getDrawable(R.drawable.ic_columbia_72);
 		}
 		if(country.equals("Uruguay")){

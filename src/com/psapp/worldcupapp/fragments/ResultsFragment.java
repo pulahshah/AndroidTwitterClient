@@ -30,11 +30,16 @@ public class ResultsFragment extends Fragment {
 	public static final String URL = "https://wcfootball.firebaseio.com";
 	AsyncHttpClient client = new AsyncHttpClient();
 	ArrayList<Result> resultsTemp = new ArrayList<Result>();
+	ListView lvResults;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceBundle) {
 		View view = inflater.inflate(R.layout.fragment_results, container,
 				false);
+		
+		getResults();
+		
+		
 		return view;
 	}
 
@@ -49,7 +54,7 @@ public class ResultsFragment extends Fragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		getResults();
+		
 	}
 
 	public ResultsAdapter getAdapter() {
@@ -74,10 +79,10 @@ public class ResultsFragment extends Fragment {
 					resultsTemp = Result.fromJson(resultsJson);
 					resultAdapter = new ResultsAdapter(getActivity(),
 							resultsTemp);
-					final ListView lvResults = (ListView) getActivity().findViewById(
+					lvResults = (ListView) getActivity().findViewById(
 							R.id.lvResults);
+					
 					lvResults.setAdapter(resultAdapter);
-
 					lvResults.setOnItemClickListener(new OnItemClickListener() {
 
 						@Override

@@ -15,24 +15,42 @@ import android.widget.TextView;
 
 import com.psapp.worldcupapp.R;
 import com.psapp.worldcupapp.models.Fixture;
+import com.psapp.worldcupapp.models.LiveScore;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-public class ScoresAdapter extends ArrayAdapter<Fixture>{
-
-	public ScoresAdapter (Context context, List<Fixture> scores) {
+public class LiveAdapter extends ArrayAdapter<Fixture>{
+	public LiveAdapter (Context context, List<Fixture> scores) {
 		super(context, 0, scores);
 	}
 
 	@Override
 	public View getView(int position, View view, ViewGroup parent) {
 		//View view = convertView;
-		if (view == null) {
-			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			view = inflater.inflate(R.layout.item_score, null);
-		}
-
+		view = null;
 		final Fixture score = getItem(position);
 		
+		if (view == null) {
+			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			
+			if(score.getTime().equals("")){	// fixture
+				view = inflater.inflate(R.layout.item_score, null);
+				
+				TextView tvGroup = (TextView) view.findViewById(R.id.tvGroup);
+				tvGroup.setText(score.getGroup());
+				
+				TextView tvDate = (TextView) view.findViewById(R.id.tvDate);
+				tvDate.setText(score.getDate());
+			}
+			else{	// live match
+				view = inflater.inflate(R.layout.item_live, null);
+				
+				TextView tvLiveTime = (TextView) view.findViewById(R.id.tvLiveTime);
+				tvLiveTime.setText(score.getTime()+"'");
+			}
+			
+		}
+
+	
 		String homeTeam = score.getHomeTeam().toString();
 		String awayTeam = score.getAwayTeam().toString();
 		
@@ -48,11 +66,11 @@ public class ScoresAdapter extends ArrayAdapter<Fixture>{
 		homeTeamName.setText(homeTeam);
 		awayTeamName.setText(awayTeam);
 		
-		TextView stadiumLocation = (TextView)view.findViewById(R.id.tvMatchLocation);  
-		stadiumLocation.setText(score.getStadium().toString());
-		
-		TextView date = (TextView)view.findViewById(R.id.tvMatchTime);
-		date.setText(score.getTime().toString());
+		TextView tvHomeScore = (TextView) view.findViewById(R.id.tvHomeScore);
+		TextView tvAwayScore = (TextView) view.findViewById(R.id.tvAwayScore);
+		tvHomeScore.setText(score.getHomeScore().toString());
+		tvAwayScore.setText(score.getAwayScore().toString());
+	
 		
 //		String formatterName = "<b>" + tweet.getUser().getName() + "</b>"
 //				+ " <small><font color='#777777'>" 
@@ -100,7 +118,7 @@ public class ScoresAdapter extends ArrayAdapter<Fixture>{
 		if(country.equals("Ivory Coast")){
 			return getContext().getResources().getDrawable(R.drawable.ic_ivorycoast_256);
 		}
-		if(country.equals("Columbia")){
+		if(country.equals("Colombia")){
 			return getContext().getResources().getDrawable(R.drawable.ic_columbia_256);
 		}
 		if(country.equals("Uruguay")){
@@ -164,6 +182,6 @@ public class ScoresAdapter extends ArrayAdapter<Fixture>{
 			return getContext().getResources().getDrawable(R.drawable.ic_southkorea_256);
 		}
 		
-		return getContext().getResources().getDrawable(R.drawable.ic_brazil_256);
+		return getContext().getResources().getDrawable(R.drawable.ic_football_256);
 	}
 }

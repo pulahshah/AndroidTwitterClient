@@ -3,6 +3,7 @@ package com.psapp.worldcupapp.adapters;
 import java.util.List;
 
 import android.content.Context;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +13,7 @@ import android.widget.TextView;
 
 import com.psapp.worldcupapp.R;
 import com.psapp.worldcupapp.models.News;
-import com.psapp.worldcupapp.models.Score;
+import com.psapp.worldcupapp.models.Fixture;
 
 public class NewsAdapter extends ArrayAdapter<News>{
 	public NewsAdapter (Context context, List<News> news) {
@@ -33,8 +34,8 @@ public class NewsAdapter extends ArrayAdapter<News>{
 		TextView snippet = (TextView)view.findViewById(R.id.tvNewsSnippet);
 //		TextView date = (TextView)view.findViewById(R.id.tvNewsDate);
 		
-		headline.setText(news.getHeadline());
-		snippet.setText(news.getSnippet());
+		headline.setText(Html.fromHtml(news.getHeadline()));
+		snippet.setText(Html.fromHtml(news.getSnippet()));
 		//date.setText(news.getDate());
 		
 		

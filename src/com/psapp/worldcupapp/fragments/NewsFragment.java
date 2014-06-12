@@ -24,72 +24,66 @@ import com.psapp.worldcupapp.ScoreDetailActivity;
 import com.psapp.worldcupapp.adapters.NewsAdapter;
 import com.psapp.worldcupapp.adapters.ScoresAdapter;
 import com.psapp.worldcupapp.models.News;
-import com.psapp.worldcupapp.models.Score;
+import com.psapp.worldcupapp.models.Fixture;
 
 public class NewsFragment extends Fragment {
 	NewsAdapter newsAdapter;
 	public static final String URL = "https://wcfootball.firebaseio.com";
 	AsyncHttpClient client = new AsyncHttpClient();
 	ArrayList<News> news = new ArrayList<News>();
-	
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceBundle){
+
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceBundle) {
 		View view = inflater.inflate(R.layout.fragment_news, container, false);
+		getNews();
 		return view;
 	}
-	
-	public static NewsFragment newInstance(String str){
+
+	public static NewsFragment newInstance(String str) {
 		NewsFragment nf = new NewsFragment();
 		Bundle b = new Bundle();
 		b.putString("msg", str);
 		nf.setArguments(b);
 		return nf;
 	}
-	
+
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		getNews();
 	}
 
 	public NewsAdapter getAdapter() {
 		return newsAdapter;
 	}
-	
+
 	public void getNews() {
 		String url = URL + "/news.json";
-		Log.d("DEBUG", "url: " + url);
 		client.get(url, new AsyncHttpResponseHandler() {
 			public void onSuccess(String json) {
 				try {
-					Log.d("DEBUG",   "News \n" + json);
 					JSONArray newsArray = new JSONArray(json);
-					
-					for(int i=0; i<newsArray.length(); i++){
-						Log.d("DEBUG", i + "\n" + newsArray.get(i).toString());
+
+					for (int i = 0; i < newsArray.length(); i++) {
 						news = News.fromJson(newsArray);
 					}
-					
-					Log.d("DEBUG", "news -------------------------"
-							+ news.size());
 
-					newsAdapter = new NewsAdapter(getActivity(),
-							news);
-					ListView lvNews = (ListView) getActivity()
-							.findViewById(R.id.lvNews);
+					newsAdapter = new NewsAdapter(getActivity(), news);
+					ListView lvNews = (ListView) getActivity().findViewById(
+							R.id.lvNews);
 					lvNews.setAdapter(newsAdapter);
 
-//					lvNews
-//							.setOnItemClickListener(new OnItemClickListener() {
-//								@Override
-//								public void onItemClick(AdapterView<?> parent,
-//										View view, int position, long id) {
-//									Intent intent = new Intent(getActivity(),
-//											ScoreDetailActivity.class);
-//									String message = "abc";
-//									intent.putExtra("EXTRA_MESSAGE", message);
-//									startActivity(intent);
-//								}
-//							});
+					// lvNews
+					// .setOnItemClickListener(new OnItemClickListener() {
+					// @Override
+					// public void onItemClick(AdapterView<?> parent,
+					// View view, int position, long id) {
+					// Intent intent = new Intent(getActivity(),
+					// ScoreDetailActivity.class);
+					// String message = "abc";
+					// intent.putExtra("EXTRA_MESSAGE", message);
+					// startActivity(intent);
+					// }
+					// });
 
 				} catch (Exception e) {
 					e.printStackTrace();

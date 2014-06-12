@@ -31,6 +31,7 @@ public class StandingsFragment extends Fragment {
 			Bundle savedInstanceBundle) {
 		View view = inflater.inflate(R.layout.fragment_standings, container,
 				false);
+		getStandings();
 		return view;
 	}
 
@@ -45,7 +46,7 @@ public class StandingsFragment extends Fragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		getStandings();
+		
 	}
 
 	public StandingsAdapter getAdapter() {
@@ -54,8 +55,6 @@ public class StandingsFragment extends Fragment {
 
 	public void getStandings() {
 		String url = URL + "/standings.json";
-		Log.d("DEBUG", "url: " + url);
-		
 		client.get(url, new AsyncHttpResponseHandler() {
 			
 			public void onSuccess(String json) {
@@ -67,10 +66,11 @@ public class StandingsFragment extends Fragment {
 						
 						JSONObject obj = new JSONObject(standingsArray.get(i)
 								.toString());
+//						Log.d("DEBUG", "Obj: " + obj.toString());
 						Iterator<?> keys = obj.keys();
 						while (keys.hasNext()) {
 							String key = (String) keys.next();
-							Log.d("DEBUG", "Key: " + key);
+//							Log.d("DEBUG", "Key: " + key);
 							if (obj.get(key) instanceof JSONObject) {
 								inGroupJson.put(obj.get(key));
 								Log.d("DEBUG", count+"");
@@ -86,7 +86,6 @@ public class StandingsFragment extends Fragment {
 					lvStandings.setAdapter(standingsAdapter);
 
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
