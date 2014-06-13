@@ -2,16 +2,11 @@ package com.psapp.worldcupapp.models;
 
 import java.util.ArrayList;
 
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.LocalDateTime;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.util.Log;
+import com.psapp.worldcupapp.PrettyDate;
 
 public class Fixture {
 	
@@ -132,33 +127,7 @@ public class Fixture {
 			}
 
 			if (jsonObject.has("date")) {
-				// 2014-06-13T08:00:00-08:00
-//				DateTimeZone defaultZone = DateTimeZone.getDefault();
-//				DateTimeZone.setDefault(myZone);
-				
-				DateTimeFormatter parser2 = ISODateTimeFormat.dateTimeNoMillis();
-				LocalDateTime dt = parser2.parseDateTime(jsonObject.getString("date")).toLocalDateTime();
-				String month = "Jun";
-				String date = dt.getDayOfMonth()+"";
-				String pm = "AM";
-				int hour = dt.getHourOfDay();
-				
-				if(dt.getMonthOfYear() == 7){
-					month = "Jul";
-				}
-				
-				if(hour>12){
-					hour = hour - 12;
-					pm = "PM";
-				}
-				
-				if(hour==12){
-					pm = "PM";
-				}
-				
-				score.date = date + " " + month + " " + hour + ":00 " + pm;
-				
-				
+				score.date = jsonObject.getString("date");
 			}
 			
 			if (jsonObject.has("time")){

@@ -77,19 +77,19 @@ public class Result implements Serializable{
 		this.awayTeam = awayTeam;
 	}
 
-	public String getHomeResult() {
+	public String getHomeScore() {
 		return homeResult;
 	}
 
-	public void setHomeResult(String homeResult) {
+	public void setHomeScore(String homeResult) {
 		this.homeResult = homeResult;
 	}
 
-	public String getAwayResult() {
+	public String getAwayScore() {
 		return awayResult;
 	}
 
-	public void setAwayResult(String awayResult) {
+	public void setAwayScore(String awayResult) {
 		this.awayResult = awayResult;
 	}
 

@@ -2,28 +2,19 @@ package com.psapp.worldcupapp;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
-import android.app.ActionBar.TabListener;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
-import com.parse.Parse;
-import com.parse.ParseAnalytics;
-import com.parse.ParseObject;
-import com.parse.ParseInstallation;
-import com.parse.PushService;
 
 import com.psapp.worldcupapp.adapters.PageAdapter;
-import com.psapp.worldcupapp.client.FootballClient;
-import com.psapp.worldcupapp.fragments.LiveScoreFragment;
-import com.psapp.worldcupapp.fragments.NewsFragment;
-import com.psapp.worldcupapp.fragments.ResultsFragment;
-import com.psapp.worldcupapp.fragments.StandingsFragment;
+import com.viewpagerindicator.TitlePageIndicator;
 
 import de.keyboardsurfer.android.widget.crouton.Configuration;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
@@ -32,7 +23,9 @@ import de.keyboardsurfer.android.widget.crouton.Style;
 public class MainActivity extends FragmentActivity{
 	private ViewPager vPager;
 	private PageAdapter pageAdapter;
-	private ActionBar actionBar;
+	private PagerTitleStrip pagerTitleStrip;
+	TitlePageIndicator mIndicator;
+	//private ActionBar actionBar;
 	private Crouton crouton;
 	
 	private boolean isConnected;
@@ -42,7 +35,15 @@ public class MainActivity extends FragmentActivity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
-		setupTabs();
+		vPager = (ViewPager) findViewById(R.id.vpPager);
+		pageAdapter = new PageAdapter(getSupportFragmentManager());
+		vPager.setAdapter(pageAdapter);
+		vPager.setPageTransformer(true, new ZoomOutPageTransformer());
+		
+//		mIndicator = (TitlePageIndicator)findViewById(R.id.indicator);
+//        mIndicator.setViewPager(vPager);
+		
+//		setupTabs();
 		
 //		Parse.initialize(this, "UyBnXScZ9pB5z2aBDIzU57rh6smKbmGijjWICdzB", "konQzSGmn8EkI4VRlCZGPNzSC2xMM4eaa0o4um6g");
 		
@@ -58,33 +59,55 @@ public class MainActivity extends FragmentActivity{
 //		testObject.put("foo", "bar");
 //		testObject.saveInBackground();
 		
-//		vPager = (ViewPager) findViewById(R.id.vpPager);
-//		pageAdapter = new PageAdapter(getSupportFragmentManager());
-		actionBar = getActionBar();
 		
-//		vPager.setAdapter(pageAdapter);
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		
-//		for (String tab_name : tabs) {
-//            actionBar.addTab(actionBar.newTab().setText(tab_name)
-//                    .setTabListener(this));
-//        }
+		
+		
 //		
-//		vPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-//			 
-//		    @Override
-//		    public void onPageSelected(int position) {
-//		        actionBar.setSelectedNavigationItem(position);
-//		    }
-//		 
-//		    @Override
-//		    public void onPageScrolled(int arg0, float arg1, int arg2) {
-//		    }
-//		 
-//		    @Override
-//		    public void onPageScrollStateChanged(int arg0) {
-//		    }
-//		});
+		vPager.setOnPageChangeListener(
+	            new ViewPager.SimpleOnPageChangeListener() {
+	                @Override
+	                public void onPageSelected(int position) {
+	                    // When swiping between pages, select the
+	                    // corresponding tab.
+	                    getActionBar().setSelectedNavigationItem(position);
+	                }
+	            });
+	
+
+		final ActionBar actionBar = getActionBar();
+		
+	    // Specify that tabs should be displayed in the action bar.
+	    actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+	    // Create a tab listener that is called when the user changes tabs.
+	    ActionBar.TabListener tabListener = new ActionBar.TabListener() {
+	        public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+	            // show the given tab
+	        	// When the tab is selected, switch to the
+	            // corresponding page in the ViewPager.
+	            vPager.setCurrentItem(tab.getPosition());
+	        }
+
+	        public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
+	            // hide the given tab
+	        }
+
+	        public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+	            // probably ignore this event
+	        }
+
+			
+	    };
+
+	    // Add 3 tabs, specifying the tab's text and TabListener
+	    for (int i = 0; i <= 3; i++) {
+	        actionBar.addTab(
+	                actionBar.newTab()
+	                        .setText(tabs[i])
+	                        .setTabListener(tabListener));
+	    }
+
 		
 		
 	}
@@ -122,7 +145,7 @@ public class MainActivity extends FragmentActivity{
 		return true;
 	}
 
-
+/*
 	private void setupTabs() {
         ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -172,7 +195,7 @@ public class MainActivity extends FragmentActivity{
 
                 actionBar.addTab(tab4);
     }
-	
+*/	
 	
 	
 }

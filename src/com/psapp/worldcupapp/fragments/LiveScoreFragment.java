@@ -23,9 +23,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.psapp.worldcupapp.R;
 import com.psapp.worldcupapp.ScoreDetailActivity;
 import com.psapp.worldcupapp.adapters.LiveAdapter;
-import com.psapp.worldcupapp.adapters.ScoresAdapter;
 import com.psapp.worldcupapp.models.Fixture;
-import com.psapp.worldcupapp.models.LiveScore;
 
 public class LiveScoreFragment extends Fragment {
 	// ScoresAdapter scoreAdapter;
@@ -34,7 +32,10 @@ public class LiveScoreFragment extends Fragment {
 	AsyncHttpClient client = new AsyncHttpClient();
 	ArrayList<Fixture> fixturesTemp = new ArrayList<Fixture>();
 	ListView lvLiveScores;
-
+	private String title;
+	private int page;
+	
+	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceBundle) {
 		View view = inflater.inflate(R.layout.fragment_live, container, false);
@@ -42,10 +43,11 @@ public class LiveScoreFragment extends Fragment {
 		return view;
 	}
 
-	public static LiveScoreFragment newInstance(String str) {
+	public static LiveScoreFragment newInstance(int page, String title) {
 		LiveScoreFragment lsf = new LiveScoreFragment();
 		Bundle b = new Bundle();
-		b.putString("msg", str);
+		b.putInt("someInt", page);
+		b.putString("someTitle", title);
 		lsf.setArguments(b);
 		return lsf;
 	}
@@ -54,6 +56,19 @@ public class LiveScoreFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 		
 		lvLiveScores = (ListView) getActivity().findViewById(R.id.lvLiveScore);
+//		getLiveScores();
+//		getFixtures();
+	}
+	
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		page = getArguments().getInt("someInt", 0);
+		title = getArguments().getString("someTitle");
+	}
+	
+	public void onResume(){
+		super.onResume();
+		Log.d("DEBUG", "live score --- onResume");
 		getLiveScores();
 		getFixtures();
 	}
@@ -61,12 +76,15 @@ public class LiveScoreFragment extends Fragment {
 	JSONArray fixturesJson;
 
 	public void getLiveScores() {
-		String url = URL + "/livescorestemp.json";
+		String url = URL + "/livescores.json";
+		Log.d("DEBUG", url);
 		client.get(url, new AsyncHttpResponseHandler() {
 			public void onSuccess(String json) {
 				try {
+					Log.d("DEBUG", json);
 					fixturesJson = new JSONArray();
 					JSONObject obj = new JSONObject(json);
+//					Log.d("DEBUG", "Live: \n" + obj.toString());
 					Iterator<?> keys = obj.keys();
 					while (keys.hasNext()) {
 						String key = (String) keys.next();
@@ -89,10 +107,12 @@ public class LiveScoreFragment extends Fragment {
 
 	public void getFixtures() {
 		String url = URL + "/fixtureswc.json";
+		Log.d("DEBUG", url);
 		client.get(url, new JsonHttpResponseHandler() {
 			public void onSuccess(int code, JSONObject json) {
 				try {
 					JSONArray temp = json.getJSONArray("table");
+//					Log.d("DEBUG", "Upcoming: \n" + temp.toString());
 					for (int i = 0; i < temp.length(); i++) {
 						fixturesJson.put(temp.get(i));
 					}

@@ -42,8 +42,8 @@ public class ResultDetailActivity extends Activity {
 		
 		TextView homeScore = (TextView) findViewById(R.id.tvHomeScore);
 		TextView awayScore = (TextView) findViewById(R.id.tvAwayScore);
-		homeScore.setText(r.getHomeResult().toString());
-		awayScore.setText(r.getAwayResult().toString());
+		homeScore.setText(r.getHomeScore().toString());
+		awayScore.setText(r.getAwayScore().toString());
 		
 	}
 

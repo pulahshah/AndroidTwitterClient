@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.psapp.worldcupapp.PrettyDate;
 import com.psapp.worldcupapp.R;
 import com.psapp.worldcupapp.models.Fixture;
 import com.psapp.worldcupapp.models.LiveScore;
@@ -39,11 +40,19 @@ public class LiveAdapter extends ArrayAdapter<Fixture>{
 				tvGroup.setText(score.getGroup());
 				
 				TextView tvDate = (TextView) view.findViewById(R.id.tvDate);
-				tvDate.setText(score.getDate());
+				String strDate = score.getDate();
+				tvDate.setText(PrettyDate.getPrettyDate(strDate));
+				
+				TextView tvMatchTime = (TextView) view.findViewById(R.id.tvMatchTime);
+				tvMatchTime.setText(PrettyDate.getPrettyTime(strDate, true));
 			}
 			else{	// live match
-				view = inflater.inflate(R.layout.item_live, null);
-				
+//				if(position == 0){
+//					view = inflater.inflate(R.layout.item_live_first, null);
+//				}
+//				else{
+					view = inflater.inflate(R.layout.item_live, null);
+//				}
 				TextView tvLiveTime = (TextView) view.findViewById(R.id.tvLiveTime);
 				tvLiveTime.setText(score.getTime()+"'");
 			}

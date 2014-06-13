@@ -31,22 +31,22 @@ public class ResultsFragment extends Fragment {
 	AsyncHttpClient client = new AsyncHttpClient();
 	ArrayList<Result> resultsTemp = new ArrayList<Result>();
 	ListView lvResults;
+	private String title;
+	private int page;
+
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceBundle) {
 		View view = inflater.inflate(R.layout.fragment_results, container,
 				false);
-		
-		getResults();
-		
-		
 		return view;
 	}
 
-	public static ResultsFragment newInstance(String str) {
+	public static ResultsFragment newInstance(int page, String title) {
 		ResultsFragment rf = new ResultsFragment();
 		Bundle b = new Bundle();
-		b.putString("msg", str);
+		b.putInt("someInt", page);
+		b.putString("someTitle", title);
 		rf.setArguments(b);
 		return rf;
 	}
@@ -54,7 +54,20 @@ public class ResultsFragment extends Fragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		
+//		getResults();
+	}
+	
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		page = getArguments().getInt("someInt", 2);
+		title = getArguments().getString("someTitle");
+	}
+
+	
+	public void onResume(){
+		super.onResume();
+		Log.d("DEBUG", "results --- onResume");
+		getResults();
 	}
 
 	public ResultsAdapter getAdapter() {

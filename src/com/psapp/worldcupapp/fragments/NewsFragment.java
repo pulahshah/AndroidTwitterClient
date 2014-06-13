@@ -3,53 +3,61 @@ package com.psapp.worldcupapp.fragments;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.AdapterView.OnItemClickListener;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.JsonHttpResponseHandler;
 import com.psapp.worldcupapp.R;
-import com.psapp.worldcupapp.ScoreDetailActivity;
 import com.psapp.worldcupapp.adapters.NewsAdapter;
-import com.psapp.worldcupapp.adapters.ScoresAdapter;
 import com.psapp.worldcupapp.models.News;
-import com.psapp.worldcupapp.models.Fixture;
 
 public class NewsFragment extends Fragment {
 	NewsAdapter newsAdapter;
 	public static final String URL = "https://wcfootball.firebaseio.com";
 	AsyncHttpClient client = new AsyncHttpClient();
 	ArrayList<News> news = new ArrayList<News>();
+	private String title;
+	private int page;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceBundle) {
 		View view = inflater.inflate(R.layout.fragment_news, container, false);
-		getNews();
+		
 		return view;
 	}
 
-	public static NewsFragment newInstance(String str) {
+	public static NewsFragment newInstance(int page, String title) {
 		NewsFragment nf = new NewsFragment();
 		Bundle b = new Bundle();
-		b.putString("msg", str);
+		b.putInt("someInt", page);
+		b.putString("someTitle", title);
 		nf.setArguments(b);
 		return nf;
 	}
 
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		//getNews();
+	}
+	
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		page = getArguments().getInt("someInt", 3);
+		title = getArguments().getString("someTitle");
+	}
 
+	
+	public void onResume(){
+		super.onResume();
+		Log.d("DEBUG", "news --- onResume");
+		getNews();
 	}
 
 	public NewsAdapter getAdapter() {
@@ -58,6 +66,7 @@ public class NewsFragment extends Fragment {
 
 	public void getNews() {
 		String url = URL + "/news.json";
+		Log.d("DEBUG", url);
 		client.get(url, new AsyncHttpResponseHandler() {
 			public void onSuccess(String json) {
 				try {

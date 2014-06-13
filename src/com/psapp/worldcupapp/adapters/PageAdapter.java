@@ -11,22 +11,33 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.util.Log;
 
 public class PageAdapter extends FragmentPagerAdapter{
-
+	LiveScoreFragment lf;
+	ResultsFragment rf;
+	StandingsFragment sf;
+	NewsFragment nf;
+	
+	private static int NUM_ITEMS = 4;
+	
 	public PageAdapter(FragmentManager fm) {
 		super(fm);
+		
+		lf = LiveScoreFragment.newInstance(0, "Live");
+		rf = ResultsFragment.newInstance(1, "Results");
+		sf = StandingsFragment.newInstance(2, "Standings");
+		nf = NewsFragment.newInstance(3, "News");
 	}
 
 	@Override
 	public Fragment getItem(int arg0) {
 		switch(arg0){
 		case 0:
-			return LiveScoreFragment.newInstance("Live Score");
+			return lf;
 		case 1:
-			return ResultsFragment.newInstance("Results");
+			return rf;
 		case 2:
-			return StandingsFragment.newInstance("Standings");
+			return sf;
 		case 3:
-			return NewsFragment.newInstance("News");
+			return nf;
 		
 		default:
 			return null;
@@ -35,8 +46,21 @@ public class PageAdapter extends FragmentPagerAdapter{
 
 	@Override
 	public int getCount() {
-		// TODO 
-		return 4;
+		return NUM_ITEMS;
 	}
+	
+	public CharSequence getPageTitle (int position) {
+		switch(position){
+		case 0:
+			return "Live";
+		case 1:
+			return "Results";
+		case 2:
+			return "Standings";
+		case 3:
+			return "News";
+		}
+		return "";
+    }
 
 }

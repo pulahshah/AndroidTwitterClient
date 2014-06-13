@@ -26,27 +26,43 @@ public class StandingsFragment extends Fragment {
 	public static final String URL = "https://wcfootball.firebaseio.com";
 	AsyncHttpClient client = new AsyncHttpClient();
 	ArrayList<Group> standingsTemp = new ArrayList<Group>();
+	private String title;
+	private int page;
+
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceBundle) {
 		View view = inflater.inflate(R.layout.fragment_standings, container,
 				false);
-		getStandings();
 		return view;
 	}
 
-	public static StandingsFragment newInstance(String str) {
+	public static StandingsFragment newInstance(int page, String title) {
 		StandingsFragment sf = new StandingsFragment();
 		Bundle b = new Bundle();
-		b.putString("msg", str);
+		b.putInt("someInt", page);
+		b.putString("someTitle", title);
 		sf.setArguments(b);
 		return sf;
 	}
 
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-
+//		getStandings();
 		
+		
+	}
+	
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		page = getArguments().getInt("someInt", 2);
+		title = getArguments().getString("someTitle");
+	}
+	
+	public void onResume(){
+		super.onResume();
+		Log.d("DEBUG", "standings --- onResume");
+		getStandings();
 	}
 
 	public StandingsAdapter getAdapter() {
@@ -55,6 +71,7 @@ public class StandingsFragment extends Fragment {
 
 	public void getStandings() {
 		String url = URL + "/standings.json";
+		Log.d("DEBUG", url);
 		client.get(url, new AsyncHttpResponseHandler() {
 			
 			public void onSuccess(String json) {
