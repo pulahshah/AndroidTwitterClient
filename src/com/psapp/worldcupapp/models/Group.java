@@ -39,6 +39,10 @@ public class Group {
 	public static Group fromJson(JSONObject jsonObject) {
 		Group group = new Group();
 		try {
+			if (jsonObject.has("played")) {
+				group.setPlayed(jsonObject.getString("played"));
+			}
+			
 			if (jsonObject.has("group")) {
 				group.setGroup(jsonObject.getString("group"));
 			}

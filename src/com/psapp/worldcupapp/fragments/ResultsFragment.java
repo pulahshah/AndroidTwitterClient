@@ -20,16 +20,16 @@ import android.widget.ListView;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.psapp.worldcupapp.DetailActivity;
 import com.psapp.worldcupapp.R;
-import com.psapp.worldcupapp.ResultDetailActivity;
 import com.psapp.worldcupapp.adapters.ResultsAdapter;
-import com.psapp.worldcupapp.models.Result;
+import com.psapp.worldcupapp.models.Match;
 
 public class ResultsFragment extends Fragment {
 	ResultsAdapter resultAdapter;
 	public static final String URL = "https://wcfootball.firebaseio.com";
 	AsyncHttpClient client = new AsyncHttpClient();
-	ArrayList<Result> resultsTemp = new ArrayList<Result>();
+	ArrayList<Match> matches = new ArrayList<Match>();
 	ListView lvResults;
 	private String title;
 	private int page;
@@ -89,9 +89,9 @@ public class ResultsFragment extends Fragment {
 							resultsJson.put(obj.get(key));
 						}
 					}
-					resultsTemp = Result.fromJson(resultsJson);
+					matches = Match.fromJson(resultsJson);
 					resultAdapter = new ResultsAdapter(getActivity(),
-							resultsTemp);
+							matches);
 					lvResults = (ListView) getActivity().findViewById(
 							R.id.lvResults);
 					
@@ -102,12 +102,12 @@ public class ResultsFragment extends Fragment {
 						public void onItemClick(AdapterView<?> parent,
 								View view, int position, long id) {
 							
-							Result tempResult = (Result) lvResults.getItemAtPosition(position);
-							Log.d("DEBUG", tempResult.getHomeTeam().toString());
+							Match match = (Match) lvResults.getItemAtPosition(position);
+//							Log.d("DEBUG", tempResult.getHomeTeam().toString());
 							
 							Intent intent = new Intent(getActivity(),
-									ResultDetailActivity.class);
-							intent.putExtra("temp", tempResult);
+									DetailActivity.class);
+							intent.putExtra("temp", match);
 							startActivity(intent);
 
 						}

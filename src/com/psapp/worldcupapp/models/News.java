@@ -73,8 +73,8 @@ public class News {
 	
 	public static ArrayList<News> fromJson(JSONArray jsonArray) {
 		ArrayList<News> news = new ArrayList<News>(jsonArray.length());
-		Log.d("DEBUG",
-				"Number of news passed in fromJson: " + jsonArray.length());
+//		Log.d("DEBUG",
+//				"Number of news passed in fromJson: " + jsonArray.length());
 		for (int i = 0; i < jsonArray.length(); i++) {
 			JSONObject newsJson = null;
 			try {

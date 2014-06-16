@@ -57,6 +57,22 @@ public class PrettyDate {
 		return date + " " + month + " " + year;
 	}
 	
+	public static String getPrettyDate(String d, Boolean y){
+		DateTimeFormatter parser2 = ISODateTimeFormat.dateTimeNoMillis();
+		LocalDateTime dt = parser2.parseDateTime(d).toLocalDateTime();
+		String month = "Jun";
+		String date = dt.getDayOfMonth()+"";
+		String pm = "AM";
+		String year = dt.getYear()+"";
+		int hour = dt.getHourOfDay();
+		
+		if(dt.getMonthOfYear() == 7){
+			month = "Jul";
+		}
+		
+		return date + " " + month;
+	}
+	
 	public static String getRelativeDate(String d){
 		return "";
 	}

@@ -32,7 +32,7 @@ android:fontFamily="sans-serif-condensed" // roboto condensed
                 android:layout_marginLeft="10dp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:fontFamily="sans-serif"
+                android:fontFamily="sans-serif-condensed"
                 android:textSize="18sp"
                 android:text="Group" />
         </LinearLayout>
@@ -133,7 +133,7 @@ android:fontFamily="sans-serif-condensed" // roboto condensed
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:ellipsize="end"
-                android:fontFamily="sans-serif"
+                android:fontFamily="sans-serif-condensed"
                 android:maxLines="1"
                 android:textSize="18sp" />
         </LinearLayout>

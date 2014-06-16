@@ -5,7 +5,7 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="11"
+        android:minSdkVersion="14"
         android:targetSdkVersion="18" />
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -29,7 +29,7 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppBaseTheme" >
         <activity
             android:name="com.psapp.worldcupapp.MainActivity"
             android:screenOrientation="portrait" >
@@ -58,7 +58,7 @@
         </activity>
         
         <activity
-            android:name="com.psapp.worldcupapp.ResultDetailActivity"
+            android:name="com.psapp.worldcupapp.DetailActivity"
             android:label="@string/title_activity_result_detail"
             android:screenOrientation="portrait"
             android:parentActivityName="com.psapp.worldcupapp.MainActivity" >

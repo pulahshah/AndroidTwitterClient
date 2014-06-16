@@ -33,7 +33,7 @@ android:fontFamily="sans-serif-condensed" // roboto condensed
 
         <TextView
             android:id="@+id/tvTeamName"
-            android:fontFamily="sans-serif"
+            android:fontFamily="sans-serif-condensed"
             android:textSize="18sp"
             android:layout_marginLeft="10dp"
             android:ellipsize="end"

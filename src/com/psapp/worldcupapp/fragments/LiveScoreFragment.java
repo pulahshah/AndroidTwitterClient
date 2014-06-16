@@ -20,17 +20,17 @@ import android.widget.ListView;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.psapp.worldcupapp.DetailActivity;
 import com.psapp.worldcupapp.R;
-import com.psapp.worldcupapp.ScoreDetailActivity;
 import com.psapp.worldcupapp.adapters.LiveAdapter;
-import com.psapp.worldcupapp.models.Fixture;
+import com.psapp.worldcupapp.models.Match;
 
 public class LiveScoreFragment extends Fragment {
 	// ScoresAdapter scoreAdapter;
 	LiveAdapter liveAdapter;
 	public static final String URL = "https://wcfootball.firebaseio.com";
 	AsyncHttpClient client = new AsyncHttpClient();
-	ArrayList<Fixture> fixturesTemp = new ArrayList<Fixture>();
+	ArrayList<Match> matches = new ArrayList<Match>();
 	ListView lvLiveScores;
 	private String title;
 	private int page;
@@ -76,12 +76,11 @@ public class LiveScoreFragment extends Fragment {
 	JSONArray fixturesJson;
 
 	public void getLiveScores() {
-		String url = URL + "/livescores.json";
+		String url = URL + "/livescorestemp.json";
 		Log.d("DEBUG", url);
 		client.get(url, new AsyncHttpResponseHandler() {
 			public void onSuccess(String json) {
 				try {
-					Log.d("DEBUG", json);
 					fixturesJson = new JSONArray();
 					JSONObject obj = new JSONObject(json);
 //					Log.d("DEBUG", "Live: \n" + obj.toString());
@@ -116,8 +115,8 @@ public class LiveScoreFragment extends Fragment {
 					for (int i = 0; i < temp.length(); i++) {
 						fixturesJson.put(temp.get(i));
 					}
-					fixturesTemp = Fixture.fromJson(fixturesJson);
-					liveAdapter = new LiveAdapter(getActivity(), fixturesTemp);
+					matches = Match.fromJson(fixturesJson);
+					liveAdapter = new LiveAdapter(getActivity(), matches);
 					
 					if(lvLiveScores!=null){
 						lvLiveScores.setAdapter(liveAdapter);
@@ -127,11 +126,21 @@ public class LiveScoreFragment extends Fragment {
 									@Override
 									public void onItemClick(AdapterView<?> parent,
 											View view, int position, long id) {
-										Intent intent = new Intent(getActivity(),
-												ScoreDetailActivity.class);
-										String message = "abc";
-										intent.putExtra("EXTRA_MESSAGE", message);
-										startActivity(intent);
+										
+										Match f = (Match) lvLiveScores.getItemAtPosition(position);
+										if(f.getLiveTime().equals("")){
+											
+										}
+										else{
+
+											Intent intent = new Intent(getActivity(),
+													DetailActivity.class);
+											
+											intent.putExtra("temp", f);
+											
+											startActivity(intent);
+										}
+										
 									}
 								});
 					}

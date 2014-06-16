@@ -90,7 +90,7 @@ public class StandingsFragment extends Fragment {
 //							Log.d("DEBUG", "Key: " + key);
 							if (obj.get(key) instanceof JSONObject) {
 								inGroupJson.put(obj.get(key));
-								Log.d("DEBUG", count+"");
+//								Log.d("DEBUG", count+"");
 								count++;
 							}
 						}

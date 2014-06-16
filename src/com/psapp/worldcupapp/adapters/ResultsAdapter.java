@@ -15,12 +15,12 @@ import android.widget.TextView;
 
 import com.psapp.worldcupapp.PrettyDate;
 import com.psapp.worldcupapp.R;
-import com.psapp.worldcupapp.models.Result;
+import com.psapp.worldcupapp.models.Match;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-public class ResultsAdapter extends ArrayAdapter<Result>{
+public class ResultsAdapter extends ArrayAdapter<Match>{
 
-	public ResultsAdapter (Context context, List<Result> results) {
+	public ResultsAdapter (Context context, List<Match> results) {
 		super(context, 0, results);
 	}
 
@@ -32,7 +32,7 @@ public class ResultsAdapter extends ArrayAdapter<Result>{
 			view = inflater.inflate(R.layout.item_result, null);
 		}
 
-		final Result result = getItem(position);
+		final Match result = getItem(position);
 		
 		String homeTeam = result.getHomeTeam().toString();
 		String awayTeam = result.getAwayTeam().toString();
@@ -42,6 +42,9 @@ public class ResultsAdapter extends ArrayAdapter<Result>{
 		
 		ivHomeFlag.setBackground(getFlag(homeTeam));
 		ivAwayFlag.setBackground(getFlag(awayTeam));
+		
+		TextView group = (TextView) view.findViewById(R.id.tvGroup);
+		group.setText(result.getGroup());
 		
 		TextView homeTeamName = (TextView)view.findViewById(R.id.tvHomeName);
 		TextView awayTeamName = (TextView)view.findViewById(R.id.tvAwayName);
@@ -54,7 +57,7 @@ public class ResultsAdapter extends ArrayAdapter<Result>{
 		tvHomeScore.setText(result.getHomeScore().toString());
 		tvAwayScore.setText(result.getAwayScore().toString());
 		
-		TextView date = (TextView)view.findViewById(R.id.tvLiveTime);
+		TextView date = (TextView)view.findViewById(R.id.tvDate);
 		date.setText(PrettyDate.getPrettyDate(result.getDate()));
 		
 //		String formatterName = "<b>" + tweet.getUser().getName() + "</b>"
