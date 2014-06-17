@@ -1,8 +1,11 @@
 package com.psapp.worldcupapp.fragments;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.TreeMap;
 
+import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -89,7 +92,11 @@ public class ResultsFragment extends Fragment {
 							resultsJson.put(obj.get(key));
 						}
 					}
-					matches = Match.fromJson(resultsJson);
+					matches = Match.fromJson(resultsJson, "results");
+					
+					Collections.sort(matches, Match.MatchDateComparator);
+					
+					
 					resultAdapter = new ResultsAdapter(getActivity(),
 							matches);
 					lvResults = (ListView) getActivity().findViewById(
@@ -125,5 +132,11 @@ public class ResultsFragment extends Fragment {
 				Log.d("NETWORK", "failure");
 			}
 		});
+	}
+	
+	
+	public void sortResults(ArrayList<Match> m){
+		TreeMap<DateTime, Match> sortMap = new TreeMap<DateTime, Match>();
+		
 	}
 }

@@ -39,14 +39,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.psapp.worldcupapp.ProfileActivity"
-            android:parentActivityName="com.psapp.worldcupapp.MainActivity"
-            android:screenOrientation="portrait" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.psapp.worldcupapp.MainActivity" />
-        </activity>
+        
         <activity
             android:name="com.psapp.worldcupapp.ScoreDetailActivity"
             android:label="@string/title_activity_score_detail"

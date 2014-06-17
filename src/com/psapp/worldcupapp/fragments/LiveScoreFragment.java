@@ -31,6 +31,7 @@ public class LiveScoreFragment extends Fragment {
 	public static final String URL = "https://wcfootball.firebaseio.com";
 	AsyncHttpClient client = new AsyncHttpClient();
 	ArrayList<Match> matches = new ArrayList<Match>();
+	JSONArray fixturesJson = new JSONArray();
 	ListView lvLiveScores;
 	private String title;
 	private int page;
@@ -73,28 +74,36 @@ public class LiveScoreFragment extends Fragment {
 		getFixtures();
 	}
 
-	JSONArray fixturesJson;
+	
 
 	public void getLiveScores() {
-		String url = URL + "/livescorestemp.json";
+		String url = URL + "/livescores.json";
 		Log.d("DEBUG", url);
 		client.get(url, new AsyncHttpResponseHandler() {
+			
 			public void onSuccess(String json) {
-				try {
-					fixturesJson = new JSONArray();
-					JSONObject obj = new JSONObject(json);
-//					Log.d("DEBUG", "Live: \n" + obj.toString());
-					Iterator<?> keys = obj.keys();
-					while (keys.hasNext()) {
-						String key = (String) keys.next();
-						if (obj.get(key) instanceof JSONObject) {
-							fixturesJson.put(obj.get(key));
+				
+				if(!json.equals("null")){
+					try {
+						
+						JSONObject obj = new JSONObject(json);
+//						Log.d("DEBUG", "Live: \n" + obj.toString());
+						Iterator<?> keys = obj.keys();
+						while (keys.hasNext()) {
+							String key = (String) keys.next();
+							if (obj.get(key) instanceof JSONObject) {
+								fixturesJson.put(obj.get(key));
 
+							}
 						}
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
-				} catch (Exception e) {
-					e.printStackTrace();
 				}
+				else{
+					Log.d("DEBUG", "No live matches");
+				}
+				
 			}
 
 			@Override
@@ -113,9 +122,10 @@ public class LiveScoreFragment extends Fragment {
 					JSONArray temp = json.getJSONArray("table");
 //					Log.d("DEBUG", "Upcoming: \n" + temp.toString());
 					for (int i = 0; i < temp.length(); i++) {
+//						Log.d("DEBUG", " ---- " + temp.get(i)..toString());
 						fixturesJson.put(temp.get(i));
 					}
-					matches = Match.fromJson(fixturesJson);
+					matches = Match.fromJson(fixturesJson, "fixtures");
 					liveAdapter = new LiveAdapter(getActivity(), matches);
 					
 					if(lvLiveScores!=null){

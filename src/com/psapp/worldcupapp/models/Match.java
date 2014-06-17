@@ -2,23 +2,26 @@ package com.psapp.worldcupapp.models;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.util.Log;
 
-public class Match implements Serializable {
+public class Match implements Serializable, Comparable<Match> {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	
 	private String homeTeam;
 	private String awayTeam;
 	private String homeScore;
@@ -96,15 +99,16 @@ public class Match implements Serializable {
 			if (jsonObject.has("time")) {
 				match.liveTime = jsonObject.getString("time");
 			}
-			
+
 			if (jsonObject.has("date")) {
 				match.date = jsonObject.getString("date");
 			}
 
 			if (jsonObject.has("group")) {
 				String str = jsonObject.getString("group");
-				if(str.charAt(0) == 'g' ){
-					str = Character.toUpperCase(str.charAt(0)) + str.substring(1);
+				if (str.charAt(0) == 'g') {
+					str = Character.toUpperCase(str.charAt(0))
+							+ str.substring(1);
 				}
 				match.group = str;
 			}
@@ -123,19 +127,20 @@ public class Match implements Serializable {
 					tuple[1] = etemp[1].trim();
 					tuple[0] = "goal";
 					tuple[3] = "home";
-					
+
 					String full = tuple[1].toString();
-					String a = tuple[1].toString().substring(0, 3).toLowerCase();
-					if(a.contains("own")){
+					String a = tuple[1].toString().substring(0, 3)
+							.toLowerCase();
+					if (a.contains("own")) {
 						tuple[1] = full.replaceFirst("Own", "").trim();
 						tuple[1] = tuple[1] + " (OG)";
 					}
-					
-					if(tuple[1].contains("penalty")){
+
+					if (tuple[1].contains("penalty")) {
 						tuple[1] = full.replaceFirst("penalty", "").trim();
 						tuple[1] = tuple[1] + " (Penalty)";
 					}
-					
+
 					match.eventMap.put(min, tuple);
 				}
 			}
@@ -152,21 +157,20 @@ public class Match implements Serializable {
 					tuple[1] = etemp[1].trim();
 					tuple[0] = "goal";
 					tuple[3] = "away";
-					
-					
+
 					String full = tuple[1].toString();
-					String a = tuple[1].toString().substring(0, 3).toLowerCase();
-					if(a.contains("own")){
+					String a = tuple[1].toString().substring(0, 3)
+							.toLowerCase();
+					if (a.contains("own")) {
 						tuple[1] = full.replaceFirst("Own", "").trim();
 						tuple[1] = tuple[1] + " (OG)";
 					}
-					
-					
-					if(tuple[1].contains("penalty")){
+
+					if (tuple[1].contains("penalty")) {
 						tuple[1] = full.replaceFirst("penalty", "").trim();
 						tuple[1] = tuple[1] + " (Penalty)";
 					}
-					
+
 					match.eventMap.put(min, tuple);
 				}
 			}
@@ -280,7 +284,7 @@ public class Match implements Serializable {
 		return match;
 	}
 
-	public static ArrayList<Match> fromJson(JSONArray jsonArray) {
+	public static ArrayList<Match> fromJson(JSONArray jsonArray, String caller) {
 		ArrayList<Match> matches = new ArrayList<Match>(jsonArray.length());
 		// Log.d("DEBUG",
 		// "Number of fixtures passed in fromJson: " + jsonArray.length());
@@ -297,12 +301,61 @@ public class Match implements Serializable {
 					.fromJson(matchJson);
 
 			if (match != null) {
-				matches.add(match);
+				if (caller.equals("fixtures") && match.getLiveTime().equals("")) {
+					// fixture
+					String date = match.getDate();
+					if (!date.equals("")) {
+
+						DateTimeFormatter formatter = DateTimeFormat
+								.forPattern("yyyy-MM-dd'T'HH:mm:ssZ");
+						DateTime matchDate = formatter.parseDateTime(date);
+
+						if (matchDate.isBeforeNow()) { // match happened in the
+														// past
+//							Log.d("DEBUG",
+//									match.getHomeTeam() + " vs "
+//											+ match.getAwayTeam());
+						} else { // upcoming fixture
+							matches.add(match);
+						}
+					}
+				} else { // add all other matches (live and results)
+					matches.add(match);
+				}
 			}
 		}
 
 		return matches;
 	}
+
+	@Override
+	public int compareTo(Match another) {
+		DateTimeFormatter formatter = DateTimeFormat
+				.forPattern("yyyy-MM-dd'T'HH:mm:ssZ");
+		DateTime anotherDate = formatter.parseDateTime(another.getDate());
+		DateTime thisDate = formatter.parseDateTime(this.date);
+
+		if (thisDate.isBefore(anotherDate)) {
+			return -1;
+		} else if (thisDate.isAfter(anotherDate)) {
+			return 1;
+		} else {
+			return 0;
+		}
+	}
+
+	public static Comparator<Match> MatchDateComparator = new Comparator<Match>() {
+
+		public int compare(Match m1, Match m2) {
+
+			// ascending order
+//			return m1.compareTo(m2);
+
+			// descending order
+			return m2.compareTo(m1);
+		}
+
+	};
 
 	public static void printEvents(TreeMap<Integer, String[]> eventMap2) {
 		for (Entry<Integer, String[]> entry : eventMap2.entrySet()) {
@@ -572,4 +625,5 @@ public class Match implements Serializable {
 	public void setLiveTime(String liveTime) {
 		this.liveTime = liveTime;
 	}
+
 }

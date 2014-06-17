@@ -37,7 +37,6 @@ public class LiveAdapter extends ArrayAdapter<Match> {
 				view = inflater.inflate(R.layout.item_score, null);
 
 				TextView tvGroup = (TextView) view.findViewById(R.id.tvGroup);
-				Log.d("DEBUG", "======================" + score.getGroup());
 				tvGroup.setText(score.getGroup());
 
 				TextView tvDate = (TextView) view.findViewById(R.id.tvDate);

@@ -15,11 +15,11 @@ import android.widget.TextView;
 
 import com.activeandroid.util.Log;
 import com.psapp.worldcupapp.R;
-import com.psapp.worldcupapp.models.Group;
+import com.psapp.worldcupapp.models.Standing;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-public class StandingsAdapter extends ArrayAdapter<Group>{
-	public StandingsAdapter (Context context, List<Group> standings) {
+public class StandingsAdapter extends ArrayAdapter<Standing>{
+	public StandingsAdapter (Context context, List<Standing> standings) {
 		super(context, 0, standings);
 	}
 
@@ -39,7 +39,7 @@ public class StandingsAdapter extends ArrayAdapter<Group>{
 			}
 		}
 
-		final Group standing = getItem(position);
+		final Standing standing = getItem(position);
 		
 		if(position == 0 || position == 4 || position == 8 || 
 				position == 12 || position == 16 || position == 20 ||
