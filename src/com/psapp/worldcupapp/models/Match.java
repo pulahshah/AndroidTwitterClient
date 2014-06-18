@@ -399,7 +399,11 @@ public class Match implements Serializable, Comparable<Match> {
 							matches.add(match);
 						}
 					}
-				} else { // add all other matches (live and results)
+				} 
+				else if(caller.equals("fixtures") && match.getLiveTime().equalsIgnoreCase("not started")){
+					
+				}
+				else { // add all other matches (live and results)
 					matches.add(match);
 				}
 			}
