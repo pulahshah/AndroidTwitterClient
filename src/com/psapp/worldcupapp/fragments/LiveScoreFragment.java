@@ -6,11 +6,14 @@ import java.util.Iterator;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -29,9 +32,9 @@ public class LiveScoreFragment extends Fragment {
 	// ScoresAdapter scoreAdapter;
 	LiveAdapter liveAdapter;
 	public static final String URL = "https://wcfootball.firebaseio.com";
-	AsyncHttpClient client = new AsyncHttpClient();
-	ArrayList<Match> matches = new ArrayList<Match>();
-	JSONArray fixturesJson = new JSONArray();
+	static AsyncHttpClient client = new AsyncHttpClient();
+	static ArrayList<Match> matches;
+	static JSONArray fixturesJson;
 	ListView lvLiveScores;
 	private String title;
 	private int page;
@@ -40,7 +43,8 @@ public class LiveScoreFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceBundle) {
 		View view = inflater.inflate(R.layout.fragment_live, container, false);
-		
+		ActionBar ab = getActivity().getActionBar();
+		setHasOptionsMenu(true);
 		return view;
 	}
 
@@ -57,28 +61,54 @@ public class LiveScoreFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 		
 		lvLiveScores = (ListView) getActivity().findViewById(R.id.lvLiveScore);
-//		getLiveScores();
-//		getFixtures();
+
 	}
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		page = getArguments().getInt("someInt", 0);
 		title = getArguments().getString("someTitle");
+		Log.d("DEBUG", "live score --- onCreate");
 	}
 	
 	public void onResume(){
 		super.onResume();
 		Log.d("DEBUG", "live score --- onResume");
+		
 		getLiveScores();
 		getFixtures();
+		
+final Handler mHandler = new Handler();
+	    
+//	   new Thread(new Runnable() {
+//	        @Override
+//	        public void run() {
+//	            // TODO Auto-generated method stub
+//	            while (true) {
+//	                try {
+//	                    Thread.sleep(15000);
+//	                    mHandler.post(new Runnable() {
+//
+//	                        @Override
+//	                        public void run() {
+//	                            LiveScoreFragment.getLiveScores();
+//	                            getFixtures();
+//	                        }
+//	                    });
+//	                } catch (Exception e) {
+//	                    // TODO: handle exception
+//	                }
+//	            }
+//	        }
+//	    }).start();
 	}
 
 	
 
-	public void getLiveScores() {
+	public static void getLiveScores() {
+		fixturesJson = new JSONArray();
+		matches = new ArrayList<Match>();
 		String url = URL + "/livescores.json";
-		Log.d("DEBUG", url);
 		client.get(url, new AsyncHttpResponseHandler() {
 			
 			public void onSuccess(String json) {
@@ -115,7 +145,6 @@ public class LiveScoreFragment extends Fragment {
 
 	public void getFixtures() {
 		String url = URL + "/fixtureswc.json";
-		Log.d("DEBUG", url);
 		client.get(url, new JsonHttpResponseHandler() {
 			public void onSuccess(int code, JSONObject json) {
 				try {
@@ -166,5 +195,18 @@ public class LiveScoreFragment extends Fragment {
 				Log.d("NETWORK", "failure");
 			}
 		});
+	}
+	
+	
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle item selection
+	    switch (item.getItemId()) {
+	    case R.id.refresh:
+	    		LiveScoreFragment.getLiveScores();
+	        getFixtures();
+	        return true;
+	    default:
+	        return super.onOptionsItemSelected(item);
+	    }
 	}
 }

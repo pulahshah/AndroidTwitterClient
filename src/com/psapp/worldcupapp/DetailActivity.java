@@ -25,7 +25,7 @@ import com.psapp.worldcupapp.models.Match;
 public class DetailActivity extends Activity {
 	public static final String URL = "https://wcfootball.firebaseio.com";
 	AsyncHttpClient client = new AsyncHttpClient();
-	ArrayList<Events> events = new ArrayList<Events>();
+	ArrayList<Events> events;
 	EventAdapter eventAdapter;
 	Match r;
 
@@ -35,41 +35,80 @@ public class DetailActivity extends Activity {
 		setContentView(R.layout.activity_detail);
 		r = (Match) getIntent().getSerializableExtra("temp");
 		// Show the Up button in the action bar.
-		setupActionBar(r.getHomeTeam(), r.getAwayTeam(), r.getDate(), r.getHomeScore(), r.getAwayScore());
-		
-		loadEvents(r);
-		
-		displayData(r);
-	}
+		setupActionBar(r.getHomeTeam(), r.getAwayTeam(), r.getDate(),
+				r.getHomeScore(), r.getAwayScore());
 
-	private void displayData(Match r) {
+		events = new ArrayList<Events>();
 		
-
-		
+		TreeMap<Integer, ArrayList<String[]>> map = r.getMap();
+		for (Entry<Integer, ArrayList<String[]>> entry : map.entrySet()) {
+			
+			ArrayList<String[]> value = entry.getValue();
+			// Log.d("DEBUG", "**********************************");
+			for (int i = 0; i < value.size(); i++) {
+				Events e = new Events();
+				String[] tuple = value.get(i);
+				e.setType(tuple[0]);
+				e.setName(tuple[1]);
+				e.setMinute(tuple[2]);
+				e.setSide(tuple[3]);
+				e.setMatch(r);
+				events.add(e);
+				
+				 
+			}
+		}
 		ListView lvEvents = (ListView) findViewById(R.id.lvEvents);
-		
-		//createDummylist();
-		
 		eventAdapter = new EventAdapter(this, events);
 		lvEvents.setAdapter(eventAdapter);
 
 	}
 
-	
-	private void loadEvents(Match r){
-		TreeMap<Integer, String[]> map = new TreeMap<Integer, String[]>();
+	private void displayData(Match r) {
+
+		ListView lvEvents = (ListView) findViewById(R.id.lvEvents);
+
+		// createDummylist();
+
+		printEvents(events);
+
+		eventAdapter = new EventAdapter(this, events);
+		lvEvents.setAdapter(eventAdapter);
+
+	}
+
+	private void printEvents(ArrayList<Events> e) {
+		Log.d("DEBUG", "passing events to the adapter");
+
+		for (int i = 0; i < e.size(); i++) {
+			Events t = e.get(i);
+			Log.d("DEBUG",
+					t.getMinute() + " ==> " + t.getName() + "    "
+							+ t.getType() + "    " + t.getSide());
+		}
+	}
+
+	private void loadEvents(Match r) {
+		TreeMap<Integer, ArrayList<String[]>> map = new TreeMap<Integer, ArrayList<String[]>>();
 		map = r.getMap();
-		for(Entry<Integer, String[]> entry : map.entrySet()) {
+		for (Entry<Integer, ArrayList<String[]>> entry : map.entrySet()) {
 			Events e = new Events();
-			  String[] value = entry.getValue();
-			  e.setType(value[0]);
-			  e.setName(value[1]);
-			  e.setMinute(value[2]);
-			  e.setSide(value[3]);
-			  e.setMatch(r);
-			  events.add(e);
-//			  Log.d("DEBUG", key + " => " + value + "--------------------------------------------------");
+			ArrayList<String[]> value = entry.getValue();
+
+			for (int i = 0; i < value.size(); i++) {
+				String[] tuple = value.get(i);
+				e.setType(tuple[0]);
+				e.setName(tuple[1]);
+				e.setMinute(tuple[2]);
+				e.setSide(tuple[3]);
+				e.setMatch(r);
+				events.add(e);
+				// Log.d("DEBUG", "**********************************");
+				// Log.d("DEBUG", tuple[2] + " => " + tuple[1] + " " + tuple[0]
+				// + " " + tuple[3] +
+				// "--------------------------------------------------");
 			}
+		}
 	}
 
 	private Drawable getFlag(String country) {
@@ -176,11 +215,13 @@ public class DetailActivity extends Activity {
 	/**
 	 * Set up the {@link android.app.ActionBar}.
 	 */
-	private void setupActionBar(String home, String away, String date, String hscore, String ascore) {
+	private void setupActionBar(String home, String away, String date,
+			String hscore, String ascore) {
 		ActionBar ab = getActionBar();
 		ab.setDisplayHomeAsUpEnabled(true);
 		ab.setTitle(home + " " + hscore + " - " + ascore + " " + away);
-		//ab.setSubtitle(PrettyDate.getPrettyDate(date, false));
+		ab.setIcon(R.drawable.football_256_white);
+		// ab.setSubtitle(PrettyDate.getPrettyDate(date, false));
 	}
 
 	@Override

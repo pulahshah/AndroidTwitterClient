@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -28,17 +29,18 @@ public class StandingsFragment extends Fragment {
 	StandingsAdapter standingsAdapter;
 	public static final String URL = "https://wcfootball.firebaseio.com";
 	AsyncHttpClient client = new AsyncHttpClient();
-	ArrayList<Standing> standings = new ArrayList<Standing>();
-	ArrayList<Standing> standingsFinal = new ArrayList<Standing>();
+	ArrayList<Standing> standings;
+	ArrayList<Standing> standingsFinal;
 	private String title;
 	private int page;
 
-	TreeMap<Integer, ArrayList<Standing>> map = new TreeMap<Integer, ArrayList<Standing>>();
+	TreeMap<Integer, ArrayList<Standing>> map;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceBundle) {
 		View view = inflater.inflate(R.layout.fragment_standings, container,
 				false);
+		setHasOptionsMenu(true);
 		return view;
 	}
 
@@ -61,11 +63,13 @@ public class StandingsFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 		page = getArguments().getInt("someInt", 2);
 		title = getArguments().getString("someTitle");
+		Log.d("DEBUG", "standings --- onCreate");
 	}
 
 	public void onResume() {
 		super.onResume();
 		Log.d("DEBUG", "standings --- onResume");
+		
 		getStandings();
 	}
 
@@ -74,8 +78,10 @@ public class StandingsFragment extends Fragment {
 	}
 
 	public void getStandings() {
+		standings = new ArrayList<Standing>();
+		standingsFinal = new ArrayList<Standing>();
+		map = new TreeMap<Integer, ArrayList<Standing>>();
 		String url = URL + "/standings.json";
-		Log.d("DEBUG", url);
 		client.get(url, new AsyncHttpResponseHandler() {
 
 			public void onSuccess(String json) {
@@ -144,15 +150,24 @@ public class StandingsFragment extends Fragment {
 		for(Map.Entry<Integer,ArrayList<Standing>> entry : map.entrySet()) {
 			  Integer key = entry.getKey();
 			  ArrayList<Standing> value = entry.getValue();
-			  
-//			  for(int i=0; i<value.size(); i++){
-//				  Log.d("DEBUG", key + "  ----   " + value.get(i).getTeam() + " - " + value.get(i).getPoints());
-//			  }  
+ 
 
 			  Collections.sort(value, Standing.StandingComparator);
 			
 			  standingsFinal.addAll(value);
 			}
 		
+	}
+	
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle item selection
+	    switch (item.getItemId()) {
+	    case R.id.refresh:
+	    		LiveScoreFragment.getLiveScores();
+	        getStandings();
+	        return true;
+	    default:
+	        return super.onOptionsItemSelected(item);
+	    }
 	}
 }

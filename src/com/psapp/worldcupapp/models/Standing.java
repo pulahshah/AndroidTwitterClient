@@ -92,8 +92,6 @@ public class Standing implements Comparable<Standing> {
 
 	public static ArrayList<Standing> fromJson(JSONArray jsonArray) {
 		ArrayList<Standing> groups = new ArrayList<Standing>(jsonArray.length());
-		Log.d("DEBUG",
-				"Number of teams passed in fromJson: " + jsonArray.length());
 		for (int i = 0; i < jsonArray.length(); i++) {
 			JSONObject groupJson = null;
 			try {

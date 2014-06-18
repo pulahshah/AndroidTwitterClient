@@ -2,6 +2,7 @@ package com.psapp.worldcupapp.models;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Map.Entry;
 import java.util.TreeMap;
@@ -62,7 +63,7 @@ public class Match implements Serializable, Comparable<Match> {
 	private String awayFormation;
 
 	// local
-	private TreeMap<Integer, String[]> eventMap;
+	private TreeMap<Integer, ArrayList<String[]>> eventMap;
 
 	public Match() {
 		this.homeTeam = "";
@@ -74,7 +75,7 @@ public class Match implements Serializable, Comparable<Match> {
 		this.date = "";
 		this.liveTime = "";
 
-		this.eventMap = new TreeMap<Integer, String[]>();
+		this.eventMap = new TreeMap<Integer, ArrayList<String[]>>(Collections.reverseOrder());
 	}
 
 	public static Match fromJson(JSONObject jsonObject) {
@@ -141,7 +142,15 @@ public class Match implements Serializable, Comparable<Match> {
 						tuple[1] = tuple[1] + " (Penalty)";
 					}
 
-					match.eventMap.put(min, tuple);
+					ArrayList<String[]> temp;
+					if (match.eventMap.containsKey(min)) {
+						temp = match.eventMap.get(min);
+
+					} else {
+						temp = new ArrayList<String[]>();
+					}
+					temp.add(tuple);
+					match.eventMap.put(min, temp);
 				}
 			}
 
@@ -171,7 +180,15 @@ public class Match implements Serializable, Comparable<Match> {
 						tuple[1] = tuple[1] + " (Penalty)";
 					}
 
-					match.eventMap.put(min, tuple);
+					ArrayList<String[]> temp;
+					if (match.eventMap.containsKey(min)) {
+						temp = match.eventMap.get(min);
+
+					} else {
+						temp = new ArrayList<String[]>();
+					}
+					temp.add(tuple);
+					match.eventMap.put(min, temp);
 				}
 			}
 
@@ -188,7 +205,15 @@ public class Match implements Serializable, Comparable<Match> {
 					tuple[1] = etemp[1].trim();
 					tuple[0] = "yellow";
 					tuple[3] = "home";
-					match.eventMap.put(min, tuple);
+					ArrayList<String[]> temp;
+					if (match.eventMap.containsKey(min)) {
+						temp = match.eventMap.get(min);
+
+					} else {
+						temp = new ArrayList<String[]>();
+					}
+					temp.add(tuple);
+					match.eventMap.put(min, temp);
 				}
 			}
 
@@ -205,7 +230,15 @@ public class Match implements Serializable, Comparable<Match> {
 					tuple[1] = etemp[1].trim();
 					tuple[0] = "yellow";
 					tuple[3] = "away";
-					match.eventMap.put(min, tuple);
+					ArrayList<String[]> temp;
+					if (match.eventMap.containsKey(min)) {
+						temp = match.eventMap.get(min);
+
+					} else {
+						temp = new ArrayList<String[]>();
+					}
+					temp.add(tuple);
+					match.eventMap.put(min, temp);
 				}
 			}
 
@@ -222,7 +255,15 @@ public class Match implements Serializable, Comparable<Match> {
 					tuple[1] = etemp[1].trim();
 					tuple[0] = "red_home";
 					tuple[3] = "home";
-					match.eventMap.put(min, tuple);
+					ArrayList<String[]> temp;
+					if (match.eventMap.containsKey(min)) {
+						temp = match.eventMap.get(min);
+
+					} else {
+						temp = new ArrayList<String[]>();
+					}
+					temp.add(tuple);
+					match.eventMap.put(min, temp);
 				}
 			}
 
@@ -239,7 +280,15 @@ public class Match implements Serializable, Comparable<Match> {
 					tuple[1] = etemp[1].trim();
 					tuple[0] = "red";
 					tuple[3] = "away";
-					match.eventMap.put(min, tuple);
+					ArrayList<String[]> temp;
+					if (match.eventMap.containsKey(min)) {
+						temp = match.eventMap.get(min);
+
+					} else {
+						temp = new ArrayList<String[]>();
+					}
+					temp.add(tuple);
+					match.eventMap.put(min, temp);
 				}
 			}
 
@@ -253,9 +302,25 @@ public class Match implements Serializable, Comparable<Match> {
 					int min = Integer.parseInt(etemp[0].trim().split("'")[0]);
 					tuple[2] = min + "";
 					tuple[1] = etemp[1].trim();
-					tuple[0] = "sub";
+
+					if (tuple[1].substring(0, 2).equals("in")) {
+						tuple[0] = "sub_in";
+						tuple[1] = tuple[1].replaceFirst("in", "").trim();
+					} else if (tuple[1].substring(0, 3).equals("out")) {
+						tuple[0] = "sub_out";
+						tuple[1] = tuple[1].replaceFirst("out", "").trim();
+					}
+
 					tuple[3] = "home";
-					match.eventMap.put(min, tuple);
+					ArrayList<String[]> temp;
+					if (match.eventMap.containsKey(min)) {
+						temp = match.eventMap.get(min);
+
+					} else {
+						temp = new ArrayList<String[]>();
+					}
+					temp.add(tuple);
+					match.eventMap.put(min, temp);
 				}
 			}
 
@@ -269,13 +334,28 @@ public class Match implements Serializable, Comparable<Match> {
 					int min = Integer.parseInt(etemp[0].trim().split("'")[0]);
 					tuple[2] = min + "";
 					tuple[1] = etemp[1].trim();
-					tuple[0] = "sub";
+
+					if (tuple[1].substring(0, 2).equals("in")) {
+						tuple[0] = "sub_in";
+						tuple[1] = tuple[1].replaceFirst("in", "").trim();
+					} else if (tuple[1].substring(0, 3).equals("out")) {
+						tuple[0] = "sub_out";
+						tuple[1] = tuple[1].replaceFirst("out", "").trim();
+					}
+
 					tuple[3] = "away";
-					match.eventMap.put(min, tuple);
+
+					ArrayList<String[]> temp;
+					if (match.eventMap.containsKey(min)) {
+						temp = match.eventMap.get(min);
+
+					} else {
+						temp = new ArrayList<String[]>();
+					}
+					temp.add(tuple);
+					match.eventMap.put(min, temp);
 				}
 			}
-
-			printEvents(match.eventMap);
 
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -312,9 +392,9 @@ public class Match implements Serializable, Comparable<Match> {
 
 						if (matchDate.isBeforeNow()) { // match happened in the
 														// past
-//							Log.d("DEBUG",
-//									match.getHomeTeam() + " vs "
-//											+ match.getAwayTeam());
+														// Log.d("DEBUG",
+							// match.getHomeTeam() + " vs "
+							// + match.getAwayTeam());
 						} else { // upcoming fixture
 							matches.add(match);
 						}
@@ -349,7 +429,7 @@ public class Match implements Serializable, Comparable<Match> {
 		public int compare(Match m1, Match m2) {
 
 			// ascending order
-//			return m1.compareTo(m2);
+			// return m1.compareTo(m2);
 
 			// descending order
 			return m2.compareTo(m1);
@@ -357,12 +437,17 @@ public class Match implements Serializable, Comparable<Match> {
 
 	};
 
-	public static void printEvents(TreeMap<Integer, String[]> eventMap2) {
-		for (Entry<Integer, String[]> entry : eventMap2.entrySet()) {
+	public static void printEvents(
+			TreeMap<Integer, ArrayList<String[]>> eventMap2) {
+		for (Entry<Integer, ArrayList<String[]>> entry : eventMap2.entrySet()) {
 			int key = entry.getKey();
-			String[] value = entry.getValue();
+			ArrayList<String[]> value = entry.getValue();
 
-			// Log.d("DEBUG", key + " => " + value[1] + " " + value[0]);
+			for (int i = 0; i < value.size(); i++) {
+				Log.d("DEBUG", key + " => " + value.get(i)[0].toString() + " "
+						+ value.get(i)[1].toString());
+			}
+
 		}
 	}
 
@@ -606,7 +691,7 @@ public class Match implements Serializable, Comparable<Match> {
 		this.group = group;
 	}
 
-	public TreeMap<Integer, String[]> getMap() {
+	public TreeMap<Integer, ArrayList<String[]>> getMap() {
 		return eventMap;
 	}
 

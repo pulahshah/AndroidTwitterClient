@@ -1,7 +1,7 @@
 package com.psapp.worldcupapp;
 
+import android.R.color;
 import android.app.ActionBar;
-import android.app.ActionBar.Tab;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -10,8 +10,12 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.TypefaceSpan;
 import android.util.Log;
 import android.view.Menu;
+import android.widget.TextView;
 
 import com.psapp.worldcupapp.adapters.PageAdapter;
 import com.viewpagerindicator.TitlePageIndicator;
@@ -29,21 +33,24 @@ public class MainActivity extends FragmentActivity{
 	private Crouton crouton;
 	
 	private boolean isConnected;
-	private String[] tabs = { "Live", "Results", "Standings", "News" };
+	private String[] tabs = { "Matches", "Results", "Table", "News" };
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
+		
+		
 		vPager = (ViewPager) findViewById(R.id.vpPager);
 		pageAdapter = new PageAdapter(getSupportFragmentManager());
 		vPager.setAdapter(pageAdapter);
 		vPager.setPageTransformer(true, new ZoomOutPageTransformer());
 		
+		
+		
 //		mIndicator = (TitlePageIndicator)findViewById(R.id.indicator);
 //        mIndicator.setViewPager(vPager);
 		
-//		setupTabs();
 		
 //		Parse.initialize(this, "UyBnXScZ9pB5z2aBDIzU57rh6smKbmGijjWICdzB", "konQzSGmn8EkI4VRlCZGPNzSC2xMM4eaa0o4um6g");
 		
@@ -76,6 +83,16 @@ public class MainActivity extends FragmentActivity{
 	
 
 		final ActionBar actionBar = getActionBar();
+		actionBar.setIcon(R.drawable.football_256_white);
+		
+		int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
+		TextView abTitle = (TextView) findViewById(titleId);
+//		abTitle.setTextColor(color.primary_text_dark);
+		
+//		SpannableString s = new SpannableString("World Cup 2014");
+//		s.setSpan(new TypefaceSpan("MyTypeface.otf"), 0, s.length(),
+//            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//		actionBar.setTitle(s);
 		
 	    // Specify that tabs should be displayed in the action bar.
 	    actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -119,6 +136,8 @@ public class MainActivity extends FragmentActivity{
 
 	    isConnected = checkConnection();
 	    Log.d("NETWORK", "is connected: " + isConnected);
+	    
+	    
 	}
 	
 	
@@ -145,57 +164,5 @@ public class MainActivity extends FragmentActivity{
 		return true;
 	}
 
-/*
-	private void setupTabs() {
-        ActionBar actionBar = getActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        actionBar.setDisplayShowTitleEnabled(true);
 
-        Tab tab1 = actionBar
-            .newTab()
-            .setText("Live")
-            .setTag("LiveScoreFragment")
-            .setTabListener(
-                new FragmentTabListener<LiveScoreFragment>(R.id.flContainer, this, "Live",
-                                LiveScoreFragment.class));
-
-        actionBar.addTab(tab1);
-        actionBar.selectTab(tab1);
-
-        Tab tab2 = actionBar
-            .newTab()
-            .setText("Results")
-//            .setIcon(R.drawable.ic_mentions)
-            .setTag("ResultsFragment")
-            .setTabListener(
-                new FragmentTabListener<ResultsFragment>(R.id.flContainer, this, "Results",
-                                ResultsFragment.class));
-
-        actionBar.addTab(tab2);
-        
-        Tab tab3 = actionBar
-                .newTab()
-                .setText("Standings")
-//                .setIcon(R.drawable.ic_mentions)
-                .setTag("StandingsFragment")
-                .setTabListener(
-                    new FragmentTabListener<StandingsFragment>(R.id.flContainer, this, "Standings",
-                                    StandingsFragment.class));
-
-            actionBar.addTab(tab3);
-            
-            Tab tab4 = actionBar
-                    .newTab()
-                    .setText("News")
-//                    .setIcon(R.drawable.ic_mentions)
-                    .setTag("NewsFragment")
-                    .setTabListener(
-                        new FragmentTabListener<NewsFragment>(R.id.flContainer, this, "News",
-                                        NewsFragment.class));
-
-                actionBar.addTab(tab4);
-    }
-*/	
-	
-	
 }

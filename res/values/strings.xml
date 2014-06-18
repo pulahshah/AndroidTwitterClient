@@ -1,19 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">WC 2014 - Brazil</string>
+    <string name="app_name">World Cup 2014 - Brazil</string>
     <string name="action_settings">Settings</string>
-    <string name="action_compose">Compose</string>
-    <string name="action_tweet">Tweet</string>
     <string name="action_refresh">Refresh</string>
     <string name="hello_world">Hello world!</string>
-    <string name="title_activity_photos">Flickr Photos</string>
     <string name="login_label">Log in</string>
-    <string name="title_activity_timeline">Timeline</string>
-    <string name="title_activity_compose">ComposeActivity</string>
-    <string name="action_profile">Profile</string>
     <string name="title_activity_profile">Profile</string>
     <string name="title_activity_score_detail">Score</string>
-    <string name="title_activity_result_detail">ResultDetail</string>
+    <string name="title_activity_result_detail">Result</string>
+    <string name="title_activity_news_detail">News</string>
 
 </resources>
