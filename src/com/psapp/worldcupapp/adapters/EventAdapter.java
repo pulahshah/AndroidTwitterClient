@@ -24,6 +24,9 @@ public class EventAdapter extends ArrayAdapter<Events> {
 	public EventAdapter(Context context, ArrayList<Events> events) {
 		super(context, 0, events);
 
+		for(Events e : events){
+			Log.d("DEBUG", e.getMinute() + " " + e.getName() + " " + e.getType());
+		}
 	}
 
 	public View getView(int position, View view, ViewGroup parent) {

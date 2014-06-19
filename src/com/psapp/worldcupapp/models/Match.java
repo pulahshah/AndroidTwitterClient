@@ -253,7 +253,7 @@ public class Match implements Serializable, Comparable<Match> {
 					int min = Integer.parseInt(etemp[0].trim().split("'")[0]);
 					tuple[2] = min + "";
 					tuple[1] = etemp[1].trim();
-					tuple[0] = "red_home";
+					tuple[0] = "red";
 					tuple[3] = "home";
 					ArrayList<String[]> temp;
 					if (match.eventMap.containsKey(min)) {
@@ -381,7 +381,8 @@ public class Match implements Serializable, Comparable<Match> {
 					.fromJson(matchJson);
 
 			if (match != null) {
-				if (caller.equals("fixtures") && match.getLiveTime().equals("")) {
+				if (caller.equals("fixtures") && 
+						match.getLiveTime().equals("") ) {
 					// fixture
 					String date = match.getDate();
 					if (!date.equals("")) {

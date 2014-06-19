@@ -167,7 +167,7 @@ final Handler mHandler = new Handler();
 											View view, int position, long id) {
 										
 										Match f = (Match) lvLiveScores.getItemAtPosition(position);
-										if(f.getLiveTime().equals("")){
+										if(f.getLiveTime().equals("") || f.getMap().isEmpty()){
 											
 										}
 										else{

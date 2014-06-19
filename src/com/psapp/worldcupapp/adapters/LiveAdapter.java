@@ -52,6 +52,12 @@ public class LiveAdapter extends ArrayAdapter<Match> {
 			// }
 			// else{
 				view = inflater.inflate(R.layout.item_live, null);
+				
+				if(score.getMap().isEmpty()){
+					TextView tvMore = (TextView) view.findViewById(R.id.tvMore);
+					tvMore.setVisibility(View.INVISIBLE);
+				}
+				
 
 				// }
 				ImageView ivDot = (ImageView) view.findViewById(R.id.ivDot);
