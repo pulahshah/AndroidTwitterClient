@@ -11,7 +11,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -29,6 +32,10 @@ import com.psapp.worldcupapp.DetailActivity;
 import com.psapp.worldcupapp.R;
 import com.psapp.worldcupapp.adapters.ResultsAdapter;
 import com.psapp.worldcupapp.models.Match;
+
+import de.keyboardsurfer.android.widget.crouton.Configuration;
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
 
 public class ResultsFragment extends Fragment {
 	ResultsAdapter resultAdapter;
@@ -70,12 +77,42 @@ public class ResultsFragment extends Fragment {
 		prevTime = 0;
 		Log.d("DEBUG", "results --- onCreate");
 	}
+	
+	private Crouton crouton;
+	public boolean checkConnection(){
+		ConnectivityManager cm =
+		        (ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+		 
+		NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+		return (activeNetwork != null && activeNetwork.isConnectedOrConnecting());
+	}
+	
+	
+	public void showCrouton(){
+		crouton = Crouton.makeText(getActivity(), "No network connection", Style.ALERT)
+			    .setConfiguration(new Configuration.Builder().setDuration(Configuration.DURATION_LONG).build());
+		crouton.show();
+	}
+	
+	public void hideCrouton(){
+		if(crouton != null){
+			crouton.hide();
+		}
+	}
+	
 
 	public void onResume() {
 		super.onResume();
 		Log.d("DEBUG", "results --- onResume");
 
-		getResults("default");
+		if(checkConnection()){
+			getResults("default");
+			hideCrouton();
+		}
+		else{
+			showCrouton();
+		}
+		
 	}
 
 	public ResultsAdapter getAdapter() {
@@ -161,7 +198,13 @@ public class ResultsFragment extends Fragment {
 		// Handle item selection
 		switch (item.getItemId()) {
 		case R.id.refresh:
-			getResults("refresh");
+			if(checkConnection()){
+				getResults("default");
+				hideCrouton();
+			}
+			else{
+				showCrouton();
+			}
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

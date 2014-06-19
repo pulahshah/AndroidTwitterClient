@@ -26,7 +26,7 @@ public class MainActivity extends FragmentActivity{
 	private PagerTitleStrip pagerTitleStrip;
 	TitlePageIndicator mIndicator;
 	//private ActionBar actionBar;
-	private Crouton crouton;
+	
 	
 	private boolean isConnected;
 	private String[] tabs = { "Matches", "Results", "Table", "News" };
@@ -83,12 +83,6 @@ public class MainActivity extends FragmentActivity{
 		
 		int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
 		TextView abTitle = (TextView) findViewById(titleId);
-//		abTitle.setTextColor(color.primary_text_dark);
-		
-//		SpannableString s = new SpannableString("World Cup 2014");
-//		s.setSpan(new TypefaceSpan("MyTypeface.otf"), 0, s.length(),
-//            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//		actionBar.setTitle(s);
 		
 	    // Specify that tabs should be displayed in the action bar.
 	    actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -129,28 +123,9 @@ public class MainActivity extends FragmentActivity{
 	@Override
 	public void onResume() {
 	    super.onResume();
+	}
+	
 
-	    isConnected = checkConnection();
-	    Log.d("NETWORK", "is connected: " + isConnected);
-	    
-	    
-	}
-	
-	
-	public void showCrouton(){
-		crouton = Crouton.makeText(this, "Test", Style.ALERT)
-			    .setConfiguration(new Configuration.Builder().setDuration(Configuration.DURATION_INFINITE).build());
-		crouton.show();
-	}
-	
-	
-	private boolean checkConnection(){
-		ConnectivityManager cm =
-		        (ConnectivityManager)getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-		 
-		NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-		return (activeNetwork != null && activeNetwork.isConnectedOrConnecting());
-	}
 	
 
 	@Override

@@ -7,7 +7,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.ActionBar;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -24,9 +27,14 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.psapp.worldcupapp.DetailActivity;
+import com.psapp.worldcupapp.NetworkChecker;
 import com.psapp.worldcupapp.R;
 import com.psapp.worldcupapp.adapters.LiveAdapter;
 import com.psapp.worldcupapp.models.Match;
+
+import de.keyboardsurfer.android.widget.crouton.Configuration;
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
 
 public class LiveScoreFragment extends Fragment {
 	// ScoresAdapter scoreAdapter;
@@ -38,6 +46,8 @@ public class LiveScoreFragment extends Fragment {
 	ListView lvLiveScores;
 	private String title;
 	private int page;
+	
+//	NetworkChecker netCheck = new NetworkChecker();
 	
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -71,12 +81,44 @@ public class LiveScoreFragment extends Fragment {
 		Log.d("DEBUG", "live score --- onCreate");
 	}
 	
+	
+private Crouton crouton;
+	
+	
+	public boolean checkConnection(){
+		ConnectivityManager cm =
+		        (ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+		 
+		NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+		return (activeNetwork != null && activeNetwork.isConnectedOrConnecting());
+	}
+	
+	
+	public void showCrouton(){
+		crouton = Crouton.makeText(getActivity(), "No network connection", Style.ALERT)
+			    .setConfiguration(new Configuration.Builder().setDuration(Configuration.DURATION_LONG).build());
+		crouton.show();
+	}
+	
+	public void hideCrouton(){
+		if(crouton != null){
+			crouton.hide();
+		}
+	}
+	
 	public void onResume(){
 		super.onResume();
 		Log.d("DEBUG", "live score --- onResume");
 		
-		getLiveScores();
-		getFixtures();
+		if(checkConnection()){
+			getLiveScores();
+			getFixtures();
+			hideCrouton();
+		}
+		else{
+			showCrouton();
+		}
+		
 		
 final Handler mHandler = new Handler();
 	    
@@ -202,8 +244,14 @@ final Handler mHandler = new Handler();
 	    // Handle item selection
 	    switch (item.getItemId()) {
 	    case R.id.refresh:
-	    		LiveScoreFragment.getLiveScores();
-	        getFixtures();
+	    	if(checkConnection()){
+				getLiveScores();
+				getFixtures();
+				hideCrouton();
+			}
+			else{
+				showCrouton();
+			}
 	        return true;
 	    default:
 	        return super.onOptionsItemSelected(item);

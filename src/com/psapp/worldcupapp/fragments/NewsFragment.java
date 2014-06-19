@@ -4,7 +4,10 @@ import java.util.ArrayList;
 
 import org.json.JSONArray;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -22,6 +25,10 @@ import com.psapp.worldcupapp.R;
 import com.psapp.worldcupapp.WebViewActivity;
 import com.psapp.worldcupapp.adapters.NewsAdapter;
 import com.psapp.worldcupapp.models.News;
+
+import de.keyboardsurfer.android.widget.crouton.Configuration;
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
 
 public class NewsFragment extends Fragment {
 	NewsAdapter newsAdapter;
@@ -59,12 +66,42 @@ public class NewsFragment extends Fragment {
 
 		Log.d("DEBUG", "news --- onCreate");
 	}
+	
+	
+	private Crouton crouton;
+	public boolean checkConnection(){
+		ConnectivityManager cm =
+		        (ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+		 
+		NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+		return (activeNetwork != null && activeNetwork.isConnectedOrConnecting());
+	}
+	
+	
+	public void showCrouton(){
+		crouton = Crouton.makeText(getActivity(), "No network connection", Style.ALERT)
+			    .setConfiguration(new Configuration.Builder().setDuration(Configuration.DURATION_LONG).build());
+		crouton.show();
+	}
+	
+	public void hideCrouton(){
+		if(crouton != null){
+			crouton.hide();
+		}
+	}
 
 	public void onResume() {
 		super.onResume();
 		Log.d("DEBUG", "news --- onResume");
 
-		getNews();
+		if(checkConnection()){
+			getNews();
+			hideCrouton();
+		}
+		else{
+			showCrouton();
+		}
+		
 	}
 
 	public NewsAdapter getAdapter() {
@@ -120,8 +157,13 @@ public class NewsFragment extends Fragment {
 		// Handle item selection
 		switch (item.getItemId()) {
 		case R.id.refresh:
-			LiveScoreFragment.getLiveScores();
-			getNews();
+			if(checkConnection()){
+				getNews();
+				hideCrouton();
+			}
+			else{
+				showCrouton();
+			}
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

@@ -10,6 +10,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -24,6 +27,10 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.psapp.worldcupapp.R;
 import com.psapp.worldcupapp.adapters.StandingsAdapter;
 import com.psapp.worldcupapp.models.Standing;
+
+import de.keyboardsurfer.android.widget.crouton.Configuration;
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
 
 public class StandingsFragment extends Fragment {
 	StandingsAdapter standingsAdapter;
@@ -65,12 +72,41 @@ public class StandingsFragment extends Fragment {
 		title = getArguments().getString("someTitle");
 		Log.d("DEBUG", "standings --- onCreate");
 	}
+	
+	private Crouton crouton;
+	public boolean checkConnection(){
+		ConnectivityManager cm =
+		        (ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+		 
+		NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+		return (activeNetwork != null && activeNetwork.isConnectedOrConnecting());
+	}
+	
+	
+	public void showCrouton(){
+		crouton = Crouton.makeText(getActivity(), "No network connection", Style.ALERT)
+			    .setConfiguration(new Configuration.Builder().setDuration(Configuration.DURATION_LONG).build());
+		crouton.show();
+	}
+	
+	public void hideCrouton(){
+		if(crouton != null){
+			crouton.hide();
+		}
+	}
 
 	public void onResume() {
 		super.onResume();
 		Log.d("DEBUG", "standings --- onResume");
 		
-		getStandings();
+		if(checkConnection()){
+			getStandings();
+			hideCrouton();
+		}
+		else{
+			showCrouton();
+		}
+		
 	}
 
 	public StandingsAdapter getAdapter() {
@@ -163,8 +199,14 @@ public class StandingsFragment extends Fragment {
 	    // Handle item selection
 	    switch (item.getItemId()) {
 	    case R.id.refresh:
-	    		LiveScoreFragment.getLiveScores();
-	        getStandings();
+	    		
+	    	if(checkConnection()){
+				getStandings();
+				hideCrouton();
+			}
+			else{
+				showCrouton();
+			}
 	        return true;
 	    default:
 	        return super.onOptionsItemSelected(item);
