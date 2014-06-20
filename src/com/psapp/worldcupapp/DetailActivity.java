@@ -127,7 +127,7 @@ public class DetailActivity extends Activity {
 	private void fetchLiveUpdates() {
 		final JSONArray liveJson = new JSONArray();
 
-		String url = URL + "/livescorestemp/" + matchId + ".json";
+		String url = URL + "/livescores/" + matchId + ".json";
 		client.get(url, new AsyncHttpResponseHandler() {
 
 			public void onSuccess(String json) {

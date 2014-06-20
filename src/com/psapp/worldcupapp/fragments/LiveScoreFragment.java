@@ -150,7 +150,7 @@ final Handler mHandler = new Handler();
 	public static void getLiveScores() {
 		fixturesJson = new JSONArray();
 		matches = new ArrayList<Match>();
-		String url = URL + "/livescorestemp.json";
+		String url = URL + "/livescores.json";
 		client.get(url, new AsyncHttpResponseHandler() {
 			
 			public void onSuccess(String json) {
