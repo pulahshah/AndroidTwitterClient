@@ -24,6 +24,7 @@ import android.widget.ListView;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.psapp.worldcupapp.NetworkChecker;
 import com.psapp.worldcupapp.R;
 import com.psapp.worldcupapp.adapters.StandingsAdapter;
 import com.psapp.worldcupapp.models.Standing;
@@ -72,25 +73,28 @@ public class StandingsFragment extends Fragment {
 		title = getArguments().getString("someTitle");
 		Log.d("DEBUG", "standings --- onCreate");
 	}
-	
+
 	private Crouton crouton;
-	public boolean checkConnection(){
-		ConnectivityManager cm =
-		        (ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-		 
+
+	public boolean checkConnection() {
+		ConnectivityManager cm = (ConnectivityManager) getActivity()
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
+
 		NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-		return (activeNetwork != null && activeNetwork.isConnectedOrConnecting());
+		return (activeNetwork != null && activeNetwork
+				.isConnectedOrConnecting());
 	}
-	
-	
-	public void showCrouton(){
-		crouton = Crouton.makeText(getActivity(), "No network connection", Style.ALERT)
-			    .setConfiguration(new Configuration.Builder().setDuration(Configuration.DURATION_LONG).build());
+
+	public void showCrouton() {
+		crouton = Crouton.makeText(getActivity(), "No network connection",
+				Style.ALERT).setConfiguration(
+				new Configuration.Builder().setDuration(
+						Configuration.DURATION_LONG).build());
 		crouton.show();
 	}
-	
-	public void hideCrouton(){
-		if(crouton != null){
+
+	public void hideCrouton() {
+		if (crouton != null) {
 			crouton.hide();
 		}
 	}
@@ -98,15 +102,14 @@ public class StandingsFragment extends Fragment {
 	public void onResume() {
 		super.onResume();
 		Log.d("DEBUG", "standings --- onResume");
-		
-		if(checkConnection()){
+
+		if (NetworkChecker.checkConnection(getActivity())) {
 			getStandings();
-			hideCrouton();
+			NetworkChecker.hideCrouton();
+		} else {
+			NetworkChecker.showCrouton(getActivity());
 		}
-		else{
-			showCrouton();
-		}
-		
+
 	}
 
 	public StandingsAdapter getAdapter() {
@@ -124,30 +127,34 @@ public class StandingsFragment extends Fragment {
 				try {
 					JSONArray standingsArray = new JSONArray(json);
 					JSONArray inGroupJson = new JSONArray();
-					for (int i = 0; i < standingsArray.length(); i++) { // iterate over groups
-						
+					for (int i = 0; i < standingsArray.length(); i++) { // iterate
+																		// over
+																		// groups
+
 						JSONObject obj = new JSONObject(standingsArray.get(i)
 								.toString());
-						
+
 						Iterator<?> keys = obj.keys();
 
-						while (keys.hasNext()) {	// iterate over each standing
+						while (keys.hasNext()) { // iterate over each standing
 							String key = (String) keys.next();
 							// Log.d("DEBUG", "Key: " + key);
 							if (obj.get(key) instanceof JSONObject) {
-								inGroupJson.put(obj.get(key));	// adding individual standing to array
-																
+								inGroupJson.put(obj.get(key)); // adding
+																// individual
+																// standing to
+																// array
+
 							}
-								
+
 						}
-						
+
 					}
-					
+
 					standings = Standing.fromJson(inGroupJson);
-					
+
 					sortStandings(standings);
-					
-					
+
 					standingsAdapter = new StandingsAdapter(getActivity(),
 							standingsFinal);
 					final ListView lvStandings = (ListView) getActivity()
@@ -165,51 +172,47 @@ public class StandingsFragment extends Fragment {
 			}
 		});
 	}
-	
-	
-	public void sortStandings(ArrayList<Standing> s){
-		
-		for(int i=0; i<s.size(); i++){
+
+	public void sortStandings(ArrayList<Standing> s) {
+
+		for (int i = 0; i < s.size(); i++) {
 			int groupid = Integer.parseInt(s.get(i).getGroupId());
 			ArrayList<Standing> temp;
-			if(map.containsKey(groupid)){
-				temp	 = map.get(groupid);
-			}
-			else{
+			if (map.containsKey(groupid)) {
+				temp = map.get(groupid);
+			} else {
 				temp = new ArrayList<Standing>();
 			}
 			temp.add(s.get(i));
 			map.put(groupid, temp);
 		}
-		
-		// 
-		for(Map.Entry<Integer,ArrayList<Standing>> entry : map.entrySet()) {
-			  Integer key = entry.getKey();
-			  ArrayList<Standing> value = entry.getValue();
- 
 
-			  Collections.sort(value, Standing.StandingComparator);
-			
-			  standingsFinal.addAll(value);
-			}
-		
+		//
+		for (Map.Entry<Integer, ArrayList<Standing>> entry : map.entrySet()) {
+			Integer key = entry.getKey();
+			ArrayList<Standing> value = entry.getValue();
+
+			Collections.sort(value, Standing.StandingComparator);
+
+			standingsFinal.addAll(value);
+		}
+
 	}
-	
+
 	public boolean onOptionsItemSelected(MenuItem item) {
-	    // Handle item selection
-	    switch (item.getItemId()) {
-	    case R.id.refresh:
-	    		
-	    	if(checkConnection()){
+		// Handle item selection
+		switch (item.getItemId()) {
+		case R.id.refresh:
+
+			if (NetworkChecker.checkConnection(getActivity())) {
 				getStandings();
-				hideCrouton();
+				NetworkChecker.hideCrouton();
+			} else {
+				NetworkChecker.showCrouton(getActivity());
 			}
-			else{
-				showCrouton();
-			}
-	        return true;
-	    default:
-	        return super.onOptionsItemSelected(item);
-	    }
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 }

@@ -110,13 +110,13 @@ private Crouton crouton;
 		super.onResume();
 		Log.d("DEBUG", "live score --- onResume");
 		
-		if(checkConnection()){
+		if(NetworkChecker.checkConnection(getActivity())){
 			getLiveScores();
 			getFixtures();
-			hideCrouton();
+			NetworkChecker.hideCrouton();
 		}
 		else{
-			showCrouton();
+			NetworkChecker.showCrouton(getActivity());
 		}
 		
 		
@@ -244,13 +244,13 @@ final Handler mHandler = new Handler();
 	    // Handle item selection
 	    switch (item.getItemId()) {
 	    case R.id.refresh:
-	    	if(checkConnection()){
+	    	if(NetworkChecker.checkConnection(getActivity())){
 				getLiveScores();
 				getFixtures();
-				hideCrouton();
+				NetworkChecker.hideCrouton();
 			}
 			else{
-				showCrouton();
+				NetworkChecker.showCrouton(getActivity());
 			}
 	        return true;
 	    default:

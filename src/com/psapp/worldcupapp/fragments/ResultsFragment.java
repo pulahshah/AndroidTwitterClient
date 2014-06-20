@@ -29,6 +29,7 @@ import android.widget.ListView;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.psapp.worldcupapp.DetailActivity;
+import com.psapp.worldcupapp.NetworkChecker;
 import com.psapp.worldcupapp.R;
 import com.psapp.worldcupapp.adapters.ResultsAdapter;
 import com.psapp.worldcupapp.models.Match;
@@ -105,12 +106,11 @@ public class ResultsFragment extends Fragment {
 		super.onResume();
 		Log.d("DEBUG", "results --- onResume");
 
-		if(checkConnection()){
+		if (NetworkChecker.checkConnection(getActivity())) {
 			getResults("default");
-			hideCrouton();
-		}
-		else{
-			showCrouton();
+			NetworkChecker.hideCrouton();
+		} else {
+			NetworkChecker.showCrouton(getActivity());
 		}
 		
 	}
@@ -198,12 +198,13 @@ public class ResultsFragment extends Fragment {
 		// Handle item selection
 		switch (item.getItemId()) {
 		case R.id.refresh:
-			if(checkConnection()){
-				getResults("default");
-				hideCrouton();
+			
+			if(NetworkChecker.checkConnection(getActivity())){
+				getResults("refresh");
+				NetworkChecker.hideCrouton();
 			}
 			else{
-				showCrouton();
+				NetworkChecker.showCrouton(getActivity());
 			}
 			return true;
 		default:

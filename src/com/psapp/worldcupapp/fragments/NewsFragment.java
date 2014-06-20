@@ -21,6 +21,7 @@ import android.widget.ListView;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.psapp.worldcupapp.NetworkChecker;
 import com.psapp.worldcupapp.R;
 import com.psapp.worldcupapp.WebViewActivity;
 import com.psapp.worldcupapp.adapters.NewsAdapter;
@@ -94,12 +95,12 @@ public class NewsFragment extends Fragment {
 		super.onResume();
 		Log.d("DEBUG", "news --- onResume");
 
-		if(checkConnection()){
+		if(NetworkChecker.checkConnection(getActivity())){
 			getNews();
-			hideCrouton();
+			NetworkChecker.hideCrouton();
 		}
 		else{
-			showCrouton();
+			NetworkChecker.showCrouton(getActivity());
 		}
 		
 	}
@@ -157,12 +158,12 @@ public class NewsFragment extends Fragment {
 		// Handle item selection
 		switch (item.getItemId()) {
 		case R.id.refresh:
-			if(checkConnection()){
+			if(NetworkChecker.checkConnection(getActivity())){
 				getNews();
-				hideCrouton();
+				NetworkChecker.hideCrouton();
 			}
 			else{
-				showCrouton();
+				NetworkChecker.showCrouton(getActivity());
 			}
 			return true;
 		default:
