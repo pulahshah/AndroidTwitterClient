@@ -23,6 +23,8 @@ public class Match implements Serializable, Comparable<Match> {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	private String id;
+	
 	private String homeTeam;
 	private String awayTeam;
 	private String homeScore;
@@ -81,6 +83,10 @@ public class Match implements Serializable, Comparable<Match> {
 	public static Match fromJson(JSONObject jsonObject) {
 		Match match = new Match();
 		try {
+			if (jsonObject.has("id")) {
+				match.id = jsonObject.getString("id");
+			}
+			
 			if (jsonObject.has("hometeam")) {
 				match.homeTeam = jsonObject.getString("hometeam");
 			}
@@ -714,6 +720,14 @@ public class Match implements Serializable, Comparable<Match> {
 
 	public void setLiveTime(String liveTime) {
 		this.liveTime = liveTime;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 }

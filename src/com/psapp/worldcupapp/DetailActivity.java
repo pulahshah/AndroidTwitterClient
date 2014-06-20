@@ -1,15 +1,19 @@
 package com.psapp.worldcupapp;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.TreeMap;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -17,6 +21,7 @@ import android.view.MenuItem;
 import android.widget.ListView;
 
 import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.psapp.worldcupapp.adapters.EventAdapter;
 import com.psapp.worldcupapp.models.Events;
 import com.psapp.worldcupapp.models.Match;
@@ -25,24 +30,44 @@ import com.psapp.worldcupapp.models.Match;
 public class DetailActivity extends Activity {
 	public static final String URL = "https://wcfootball.firebaseio.com";
 	AsyncHttpClient client = new AsyncHttpClient();
-	ArrayList<Events> events;
 	EventAdapter eventAdapter;
 	Match r;
+	String caller;
+	String matchId;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_detail);
+
 		r = (Match) getIntent().getSerializableExtra("temp");
 		// Show the Up button in the action bar.
 		setupActionBar(r.getHomeTeam(), r.getAwayTeam(), r.getDate(),
 				r.getHomeScore(), r.getAwayScore());
 
-		events = new ArrayList<Events>();
+		matchId = r.getId();
+
+		ArrayList<Events> e = new ArrayList<Events>();
+		e = loadEvents(r);
+
+		displayEvents(e);
+	}
+
+	private void displayEvents(ArrayList<Events> updatedEvent) {
+		Log.d("DEBUG", "display events called --------------");
 		
+		ListView lvEvents = (ListView) findViewById(R.id.lvEvents);
+		eventAdapter = new EventAdapter(this, updatedEvent);
+		eventAdapter.notifyDataSetChanged();
+		lvEvents.setAdapter(eventAdapter);
+		
+	}
+
+	private ArrayList<Events> loadEvents(Match r) {
+		ArrayList<Events> events = new ArrayList<Events>();
 		TreeMap<Integer, ArrayList<String[]>> map = r.getMap();
 		for (Entry<Integer, ArrayList<String[]>> entry : map.entrySet()) {
-			
+
 			ArrayList<String[]> value = entry.getValue();
 			// Log.d("DEBUG", "**********************************");
 			for (int i = 0; i < value.size(); i++) {
@@ -54,27 +79,96 @@ public class DetailActivity extends Activity {
 				e.setSide(tuple[3]);
 				e.setMatch(r);
 				events.add(e);
-				
-				 
+
 			}
 		}
-		ListView lvEvents = (ListView) findViewById(R.id.lvEvents);
-		eventAdapter = new EventAdapter(this, events);
-		lvEvents.setAdapter(eventAdapter);
-
+		return events;
 	}
 
-	private void displayData(Match r) {
+	Thread thread = null;
+	
+	protected void onPause(){
+		super.onPause();
+		if(thread != null){
+			thread.interrupt();
+		}
+	}
+	
+	
+	protected void onResume() {
+		super.onResume();
 
-		ListView lvEvents = (ListView) findViewById(R.id.lvEvents);
+//		caller = getIntent().getStringExtra("caller");
+//		if (caller.equals("live")) {
+//			
+//			Log.d("DEBUG", "entry is from live -- so update");
+//			
+//			Thread thread = new Thread(){
+//			    @Override
+//			    public void run() {
+//			        try {
+//			            while(true) {
+//			                sleep(10000);
+//			                //mhandler.post(r);
+//			                fetchLiveUpdates();
+//			            }
+//			        } catch (InterruptedException e) {
+//			            e.printStackTrace();
+//			        }
+//			    }
+//			};
+//
+//			thread.start();
+//			
+//		
+//		}
+	}
 
-		// createDummylist();
+	private void fetchLiveUpdates() {
+		final JSONArray liveJson = new JSONArray();
 
-		printEvents(events);
+		String url = URL + "/livescorestemp/" + matchId + ".json";
+		client.get(url, new AsyncHttpResponseHandler() {
 
-		eventAdapter = new EventAdapter(this, events);
-		lvEvents.setAdapter(eventAdapter);
+			public void onSuccess(String json) {
+				if (!json.equals("null")) {
+					try {
 
+						JSONObject obj = new JSONObject(json);
+						
+						liveJson.put(obj);
+
+						ArrayList<Match> matches = Match.fromJson(liveJson,
+								"live");
+//						Log.d("DEBUG", "Matches being returned --- " + matches.size() );
+						
+						for(Match m : matches){
+							r = m;
+							setupActionBar(r.getHomeTeam(), r.getAwayTeam(), r.getDate(),
+									r.getHomeScore(), r.getAwayScore());
+							
+//							Log.d("DEBUG", "******************** away score: " + match.getAwayScore());
+						}
+						if(r != null){
+							ArrayList<Events> e = new ArrayList<Events>();
+							e = loadEvents(r);
+							displayEvents(e);
+						}
+
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				} else {
+					Log.d("DEBUG", "No live matches");
+				}
+
+			}
+
+			@Override
+			public void onFailure(Throwable arg0) {
+				Log.d("NETWORK", "failure");
+			}
+		});
 	}
 
 	private void printEvents(ArrayList<Events> e) {
@@ -86,130 +180,6 @@ public class DetailActivity extends Activity {
 					t.getMinute() + " ==> " + t.getName() + "    "
 							+ t.getType() + "    " + t.getSide());
 		}
-	}
-
-	private void loadEvents(Match r) {
-		TreeMap<Integer, ArrayList<String[]>> map = new TreeMap<Integer, ArrayList<String[]>>();
-		map = r.getMap();
-		for (Entry<Integer, ArrayList<String[]>> entry : map.entrySet()) {
-			Events e = new Events();
-			ArrayList<String[]> value = entry.getValue();
-
-			for (int i = 0; i < value.size(); i++) {
-				String[] tuple = value.get(i);
-				e.setType(tuple[0]);
-				e.setName(tuple[1]);
-				e.setMinute(tuple[2]);
-				e.setSide(tuple[3]);
-				e.setMatch(r);
-				events.add(e);
-				// Log.d("DEBUG", "**********************************");
-				// Log.d("DEBUG", tuple[2] + " => " + tuple[1] + " " + tuple[0]
-				// + " " + tuple[3] +
-				// "--------------------------------------------------");
-			}
-		}
-	}
-
-	private Drawable getFlag(String country) {
-		if (country.equals("Cameroon")) {
-			return getResources().getDrawable(R.drawable.ic_cameroon_256);
-		}
-		if (country.equals("Croatia")) {
-			return getResources().getDrawable(R.drawable.ic_croatia_256);
-		}
-		if (country.equals("Mexico")) {
-			return getResources().getDrawable(R.drawable.ic_mexico_256);
-		}
-		if (country.equals("Brazil")) {
-			return getResources().getDrawable(R.drawable.ic_brazil_256);
-		}
-		if (country.equals("Chile")) {
-			return getResources().getDrawable(R.drawable.ic_chile_256);
-		}
-		if (country.equals("Australia")) {
-			return getResources().getDrawable(R.drawable.ic_australia_256);
-		}
-		if (country.equals("Spain")) {
-			return getResources().getDrawable(R.drawable.ic_spain_256);
-		}
-		if (country.equals("Netherlands")) {
-			return getResources().getDrawable(R.drawable.ic_netherlands_256);
-		}
-		if (country.equals("Greece")) {
-			return getResources().getDrawable(R.drawable.ic_greece_256);
-		}
-		if (country.equals("Japan")) {
-			return getResources().getDrawable(R.drawable.ic_japan_256);
-		}
-		if (country.equals("Ivory Coast")) {
-			return getResources().getDrawable(R.drawable.ic_ivorycoast_256);
-		}
-		if (country.equals("Colombia")) {
-			return getResources().getDrawable(R.drawable.ic_columbia_256);
-		}
-		if (country.equals("Uruguay")) {
-			return getResources().getDrawable(R.drawable.ic_uruguay_256);
-		}
-		if (country.equals("England")) {
-			return getResources().getDrawable(R.drawable.ic_england_256);
-		}
-		if (country.equals("Costa Rica")) {
-			return getResources().getDrawable(R.drawable.ic_costarica_256);
-		}
-		if (country.equals("Italy")) {
-			return getResources().getDrawable(R.drawable.ic_italy_256);
-		}
-		if (country.equals("Honduras")) {
-			return getResources().getDrawable(R.drawable.ic_honduras_256);
-		}
-		if (country.equals("Ecuador")) {
-			return getResources().getDrawable(R.drawable.ic_ecuador_256);
-		}
-		if (country.equals("France")) {
-			return getResources().getDrawable(R.drawable.ic_france_256);
-		}
-		if (country.equals("Switzerland")) {
-			return getResources().getDrawable(R.drawable.ic_switzerland_256);
-		}
-		if (country.equals("Nigeria")) {
-			return getResources().getDrawable(R.drawable.ic_nigeria_256);
-		}
-		if (country.equals("Iran")) {
-			return getResources().getDrawable(R.drawable.ic_iran_256);
-		}
-		if (country.contains("Bosnia")) {
-			return getResources().getDrawable(R.drawable.ic_bosnia_256);
-		}
-		if (country.equals("Argentina")) {
-			return getResources().getDrawable(R.drawable.ic_argentina_256);
-		}
-		if (country.equals("Germany")) {
-			return getResources().getDrawable(R.drawable.ic_germany_256);
-		}
-		if (country.equals("Ghana")) {
-			return getResources().getDrawable(R.drawable.ic_ghana_256);
-		}
-		if (country.equals("Portugal")) {
-			return getResources().getDrawable(R.drawable.ic_portugal_256);
-		}
-		if (country.equals("USA")) {
-			return getResources().getDrawable(R.drawable.ic_usa_256);
-		}
-		if (country.equals("Belgium")) {
-			return getResources().getDrawable(R.drawable.ic_belgium_256);
-		}
-		if (country.equals("Algeria")) {
-			return getResources().getDrawable(R.drawable.ic_algeria_256);
-		}
-		if (country.equals("Russia")) {
-			return getResources().getDrawable(R.drawable.ic_russia_256);
-		}
-		if (country.contains("Korea")) {
-			return getResources().getDrawable(R.drawable.ic_southkorea_256);
-		}
-
-		return getResources().getDrawable(R.drawable.ic_football_256);
 	}
 
 	/**
@@ -243,6 +213,9 @@ public class DetailActivity extends Activity {
 			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
 			//
 			NavUtils.navigateUpFromSameTask(this);
+			return true;
+		case R.id.refresh:
+			fetchLiveUpdates();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

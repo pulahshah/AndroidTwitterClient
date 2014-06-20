@@ -25,12 +25,15 @@ public class EventAdapter extends ArrayAdapter<Events> {
 	public EventAdapter(Context context, ArrayList<Events> events) {
 		super(context, 0, events);
 
-		for(Events e : events){
-			Log.d("DEBUG", e.getMinute() + " " + e.getName() + " " + e.getType());
+		Log.d("DEBUG", "Logging all passed events");
+		for (Events e : events) {
+			Log.d("DEBUG",
+					e.getMinute() + " " + e.getName() + " " + e.getType());
 		}
 	}
 
 	public View getView(int position, View view, ViewGroup parent) {
+
 		Events e = getItem(position);
 
 		view = null;
@@ -73,8 +76,10 @@ public class EventAdapter extends ArrayAdapter<Events> {
 					ImageView ivAwayFlag = (ImageView) view
 							.findViewById(R.id.ivAwayIcon);
 
-					ivHomeFlag.setBackground(Utilities.getFlag(getContext(), r.getHomeTeam()));
-					ivAwayFlag.setBackground(Utilities.getFlag(getContext(), r.getAwayTeam()));
+					ivHomeFlag.setBackground(Utilities.getFlag(getContext(),
+							r.getHomeTeam()));
+					ivAwayFlag.setBackground(Utilities.getFlag(getContext(),
+							r.getAwayTeam()));
 
 					TextView group = (TextView) view.findViewById(R.id.tvGroup);
 					group.setText(r.getGroup());
@@ -112,8 +117,10 @@ public class EventAdapter extends ArrayAdapter<Events> {
 					ImageView ivAwayFlag = (ImageView) view
 							.findViewById(R.id.ivAwayIcon);
 
-					ivHomeFlag.setBackground(Utilities.getFlag(getContext(), r.getHomeTeam()));
-					ivAwayFlag.setBackground(Utilities.getFlag(getContext(), r.getAwayTeam()));
+					ivHomeFlag.setBackground(Utilities.getFlag(getContext(),
+							r.getHomeTeam()));
+					ivAwayFlag.setBackground(Utilities.getFlag(getContext(),
+							r.getAwayTeam()));
 
 					TextView group = (TextView) view.findViewById(R.id.tvGroup);
 					group.setText(r.getGroup());
@@ -160,7 +167,8 @@ public class EventAdapter extends ArrayAdapter<Events> {
 
 			ImageView ivEventType = (ImageView) view
 					.findViewById(R.id.ivEventType);
-			ivEventType.setBackground(Utilities.getEventIcon(getContext(), type));
+			ivEventType.setBackground(Utilities
+					.getEventIcon(getContext(), type));
 
 			TextView tvEventName = (TextView) view
 					.findViewById(R.id.tvEventName);
@@ -170,7 +178,4 @@ public class EventAdapter extends ArrayAdapter<Events> {
 		return view;
 	}
 
-	
-
-	
 }

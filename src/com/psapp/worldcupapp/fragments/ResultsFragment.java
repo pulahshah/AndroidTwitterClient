@@ -175,6 +175,7 @@ public class ResultsFragment extends Fragment {
 							Intent intent = new Intent(getActivity(),
 									DetailActivity.class);
 							intent.putExtra("temp", match);
+							intent.putExtra("caller", "result");
 							startActivity(intent);
 
 						}

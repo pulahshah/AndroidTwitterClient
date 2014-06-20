@@ -150,7 +150,7 @@ final Handler mHandler = new Handler();
 	public static void getLiveScores() {
 		fixturesJson = new JSONArray();
 		matches = new ArrayList<Match>();
-		String url = URL + "/livescores.json";
+		String url = URL + "/livescorestemp.json";
 		client.get(url, new AsyncHttpResponseHandler() {
 			
 			public void onSuccess(String json) {
@@ -218,7 +218,7 @@ final Handler mHandler = new Handler();
 													DetailActivity.class);
 											
 											intent.putExtra("temp", f);
-											
+											intent.putExtra("caller", "live");
 											startActivity(intent);
 										}
 										
