@@ -1,6 +1,7 @@
 package com.psapp.worldcupapp.adapters;
 
 import java.util.List;
+import java.util.TimeZone;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -12,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.activeandroid.util.Log;
 import com.psapp.worldcupapp.PrettyDate;
 import com.psapp.worldcupapp.R;
 import com.psapp.worldcupapp.Utilities;
@@ -46,12 +48,9 @@ public class LiveAdapter extends ArrayAdapter<Match> {
 
 				TextView tvMatchTime = (TextView) view
 						.findViewById(R.id.tvMatchTime);
+				
 				tvMatchTime.setText(PrettyDate.getPrettyTime(strDate, true));
-			} else { // live match TODO
-			// if(position == 0){
-			// view = inflater.inflate(R.layout.item_live_first, null);
-			// }
-			// else{
+			} else { 
 				view = inflater.inflate(R.layout.item_live, null);
 				
 				if(score.getMap().isEmpty()){
@@ -60,7 +59,6 @@ public class LiveAdapter extends ArrayAdapter<Match> {
 				}
 				
 
-				// }
 				ImageView ivDot = (ImageView) view.findViewById(R.id.ivDot);
 				TextView tvLiveTime = (TextView) view
 						.findViewById(R.id.tvLiveTime);

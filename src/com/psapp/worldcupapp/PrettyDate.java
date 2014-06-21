@@ -1,12 +1,12 @@
 package com.psapp.worldcupapp;
 
-import org.joda.time.Instant;
-import org.joda.time.Interval;
+import java.util.TimeZone;
+
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
-import android.text.format.Time;
+import com.activeandroid.util.Log;
 
 public class PrettyDate {
 	
@@ -20,8 +20,14 @@ public class PrettyDate {
 	
 	public static String getPrettyTime(String d, Boolean format24){
 		DateTimeFormatter parser2 = ISODateTimeFormat.dateTimeNoMillis();
+		
 		LocalDateTime dt = parser2.parseDateTime(d).toLocalDateTime();
+		System.out.println("Local: " + dt.toString());
+		
+		
+		
 		int hour = dt.getHourOfDay();
+		int min = dt.getMinuteOfHour();
 		String pm = "";
 		
 		if(!format24){
@@ -38,7 +44,7 @@ public class PrettyDate {
 			}
 			
 		}
-		return hour + ":00 " + pm;
+		return hour + ":" + min + " " + pm;
 	}
 	
 	public static String getPrettyDate(String d){
