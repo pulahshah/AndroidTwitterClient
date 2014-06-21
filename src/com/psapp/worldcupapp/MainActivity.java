@@ -2,23 +2,15 @@ package com.psapp.worldcupapp;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.Menu;
 import android.widget.TextView;
 
 import com.psapp.worldcupapp.adapters.PageAdapter;
 import com.viewpagerindicator.TitlePageIndicator;
-
-import de.keyboardsurfer.android.widget.crouton.Configuration;
-import de.keyboardsurfer.android.widget.crouton.Crouton;
-import de.keyboardsurfer.android.widget.crouton.Style;
 
 public class MainActivity extends FragmentActivity{
 	private ViewPager vPager;
@@ -41,7 +33,7 @@ public class MainActivity extends FragmentActivity{
 		pageAdapter = new PageAdapter(getSupportFragmentManager());
 		vPager.setAdapter(pageAdapter);
 		vPager.setPageTransformer(true, new ZoomOutPageTransformer());
-		
+		vPager.setOffscreenPageLimit(4);
 		
 		
 //		mIndicator = (TitlePageIndicator)findViewById(R.id.indicator);
