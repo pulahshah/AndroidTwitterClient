@@ -39,6 +39,9 @@ public class LiveAdapter extends ArrayAdapter<Match> {
 			if (score.getLiveTime().equals("")) { // fixture
 				view = inflater.inflate(R.layout.item_score, null);
 
+				TextView tvMore = (TextView) view.findViewById(R.id.tvMore);
+				tvMore.setVisibility(View.INVISIBLE);
+				
 				TextView tvGroup = (TextView) view.findViewById(R.id.tvGroup);
 				tvGroup.setText(score.getGroup());
 
@@ -52,11 +55,6 @@ public class LiveAdapter extends ArrayAdapter<Match> {
 				tvMatchTime.setText(PrettyDate.getPrettyTime(strDate, true));
 			} else { 
 				view = inflater.inflate(R.layout.item_live, null);
-				
-				if(score.getMap().isEmpty()){
-					TextView tvMore = (TextView) view.findViewById(R.id.tvMore);
-					tvMore.setVisibility(View.INVISIBLE);
-				}
 				
 
 				ImageView ivDot = (ImageView) view.findViewById(R.id.ivDot);

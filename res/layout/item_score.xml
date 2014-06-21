@@ -125,8 +125,14 @@
             android:layout_gravity="center" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+                android:id="@+id/tvMore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif"
+                android:gravity="right"
+                android:textColor="#399cd9"
+                android:textSize="12sp"
+                android:text="More..." />
     </LinearLayout>
 
 </LinearLayout>

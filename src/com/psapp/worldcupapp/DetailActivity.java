@@ -1,7 +1,6 @@
 package com.psapp.worldcupapp;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
@@ -13,12 +12,14 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -47,20 +48,71 @@ public class DetailActivity extends Activity {
 
 		matchId = r.getId();
 
+		updateHeader(caller);
+
 		ArrayList<Events> e = new ArrayList<Events>();
 		e = loadEvents(r);
 
 		displayEvents(e);
 	}
 
+	private void updateHeader(String c) {
+		TextView tvMore = (TextView) findViewById(R.id.tvMore);
+		tvMore.setVisibility(View.INVISIBLE);
+
+		TextView homeName = (TextView) findViewById(R.id.tvHomeName);
+		TextView awayName = (TextView) findViewById(R.id.tvAwayName);
+		homeName.setText(r.getHomeTeam());
+		awayName.setText(r.getAwayTeam());
+
+		TextView homeScore = (TextView) findViewById(R.id.tvHomeScore);
+		TextView awayScore = (TextView) findViewById(R.id.tvAwayScore);
+		homeScore.setText(r.getHomeScore().toString());
+		awayScore.setText(r.getAwayScore().toString());
+
+		ImageView ivHomeFlag = (ImageView) findViewById(R.id.ivHomeIcon);
+		ImageView ivAwayFlag = (ImageView) findViewById(R.id.ivAwayIcon);
+
+		ivHomeFlag.setBackground(Utilities.getFlag(getApplicationContext(),
+				r.getHomeTeam()));
+		ivAwayFlag.setBackground(Utilities.getFlag(getApplicationContext(),
+				r.getAwayTeam()));
+
+		TextView group = (TextView) findViewById(R.id.tvGroup);
+		group.setText(r.getGroup());
+
+		ImageView ivDot = (ImageView) findViewById(R.id.ivDot);
+		TextView tvLiveTime = (TextView) findViewById(R.id.tvLiveTime);
+		String tmp = r.getLiveTime();
+		
+		if (tmp.equalsIgnoreCase("finished")) {
+//			tmp = "Full-time";
+			ivDot.setVisibility(View.GONE);
+			tmp = PrettyDate.getPrettyDate(r.getDate());
+		} else if (tmp.equalsIgnoreCase("not started")
+				|| tmp.equalsIgnoreCase("notstarted")) {
+			tmp = PrettyDate.getPrettyTime(r.getDate(), true);
+			ivDot.setVisibility(View.GONE);
+		} else if (tmp.equalsIgnoreCase("Halftime")
+				|| tmp.equalsIgnoreCase("Half time")) {
+			tmp = "Half-time";
+			ivDot.setVisibility(View.VISIBLE);
+		} else {
+			// increase size to display live time
+			tvLiveTime.setTextSize(20);
+		}
+
+		tvLiveTime.setText(tmp);
+	}
+
 	private void displayEvents(ArrayList<Events> updatedEvent) {
 		Log.d("DEBUG", "display events called --------------");
-		
+
 		ListView lvEvents = (ListView) findViewById(R.id.lvEvents);
 		eventAdapter = new EventAdapter(this, updatedEvent);
 		eventAdapter.notifyDataSetChanged();
 		lvEvents.setAdapter(eventAdapter);
-		
+
 	}
 
 	private ArrayList<Events> loadEvents(Match r) {
@@ -86,48 +138,46 @@ public class DetailActivity extends Activity {
 	}
 
 	Thread thread = null;
-	
-	protected void onPause(){
+
+	protected void onPause() {
 		super.onPause();
-		if(thread != null){
+		if (thread != null) {
 			thread.interrupt();
 		}
 	}
-	
-	
+
 	protected void onResume() {
 		super.onResume();
 
-//		caller = getIntent().getStringExtra("caller");
-//		if (caller.equals("live")) {
-//			
-//			Log.d("DEBUG", "entry is from live -- so update");
-//			
-//			Thread thread = new Thread(){
-//			    @Override
-//			    public void run() {
-//			        try {
-//			            while(true) {
-//			                sleep(10000);
-//			                //mhandler.post(r);
-//			                fetchLiveUpdates();
-//			            }
-//			        } catch (InterruptedException e) {
-//			            e.printStackTrace();
-//			        }
-//			    }
-//			};
-//
-//			thread.start();
-//			
-//		
-//		}
+		caller = getIntent().getStringExtra("caller");
+		// if (caller.equals("live")) {
+		//
+		// Log.d("DEBUG", "entry is from live -- so update");
+		//
+		// Thread thread = new Thread(){
+		// @Override
+		// public void run() {
+		// try {
+		// while(true) {
+		// sleep(10000);
+		// //mhandler.post(r);
+		// fetchLiveUpdates();
+		// }
+		// } catch (InterruptedException e) {
+		// e.printStackTrace();
+		// }
+		// }
+		// };
+		//
+		// thread.start();
+		//
+		//
+		// }
 	}
 
 	private void fetchLiveUpdates() {
 		final JSONArray liveJson = new JSONArray();
-
-		String url = URL + "/livescores/" + matchId + ".json";
+		String url = URL + "/livescorestemp/" + matchId + ".json";
 		client.get(url, new AsyncHttpResponseHandler() {
 
 			public void onSuccess(String json) {
@@ -135,21 +185,23 @@ public class DetailActivity extends Activity {
 					try {
 
 						JSONObject obj = new JSONObject(json);
-						
+
 						liveJson.put(obj);
 
 						ArrayList<Match> matches = Match.fromJson(liveJson,
 								"live");
-//						Log.d("DEBUG", "Matches being returned --- " + matches.size() );
-						
-						for(Match m : matches){
+						// Log.d("DEBUG", "Matches being returned --- " +
+						// matches.size() );
+
+						for (Match m : matches) {
 							r = m;
-							setupActionBar(r.getHomeTeam(), r.getAwayTeam(), r.getDate(),
-									r.getHomeScore(), r.getAwayScore());
+							setupActionBar(r.getHomeTeam(), r.getAwayTeam(),
+									r.getDate(), r.getHomeScore(),
+									r.getAwayScore());
+
 							
-//							Log.d("DEBUG", "******************** away score: " + match.getAwayScore());
 						}
-						if(r != null){
+						if (r != null) {
 							ArrayList<Events> e = new ArrayList<Events>();
 							e = loadEvents(r);
 							displayEvents(e);
@@ -197,6 +249,9 @@ public class DetailActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
+		if(caller != null && caller.equalsIgnoreCase("results")){
+			return true;
+		}
 		getMenuInflater().inflate(R.menu.result_detail, menu);
 		return true;
 	}
