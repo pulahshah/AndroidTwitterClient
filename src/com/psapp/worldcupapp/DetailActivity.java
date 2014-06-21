@@ -47,7 +47,6 @@ public class DetailActivity extends Activity {
 				r.getHomeScore(), r.getAwayScore());
 
 		matchId = r.getId();
-
 		updateHeader(caller);
 
 		ArrayList<Events> e = new ArrayList<Events>();
@@ -84,9 +83,9 @@ public class DetailActivity extends Activity {
 		ImageView ivDot = (ImageView) findViewById(R.id.ivDot);
 		TextView tvLiveTime = (TextView) findViewById(R.id.tvLiveTime);
 		String tmp = r.getLiveTime();
-		
+
 		if (tmp.equalsIgnoreCase("finished")) {
-//			tmp = "Full-time";
+			// tmp = "Full-time";
 			ivDot.setVisibility(View.GONE);
 			tmp = PrettyDate.getPrettyDate(r.getDate());
 		} else if (tmp.equalsIgnoreCase("not started")
@@ -199,7 +198,6 @@ public class DetailActivity extends Activity {
 									r.getDate(), r.getHomeScore(),
 									r.getAwayScore());
 
-							
 						}
 						if (r != null) {
 							ArrayList<Events> e = new ArrayList<Events>();
@@ -223,17 +221,6 @@ public class DetailActivity extends Activity {
 		});
 	}
 
-	private void printEvents(ArrayList<Events> e) {
-		Log.d("DEBUG", "passing events to the adapter");
-
-		for (int i = 0; i < e.size(); i++) {
-			Events t = e.get(i);
-			Log.d("DEBUG",
-					t.getMinute() + " ==> " + t.getName() + "    "
-							+ t.getType() + "    " + t.getSide());
-		}
-	}
-
 	/**
 	 * Set up the {@link android.app.ActionBar}.
 	 */
@@ -248,11 +235,10 @@ public class DetailActivity extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		if(caller != null && caller.equalsIgnoreCase("results")){
+		if (caller != null && caller.equalsIgnoreCase("results")) {
 			return true;
 		}
-		getMenuInflater().inflate(R.menu.result_detail, menu);
+		getMenuInflater().inflate(R.menu.detail, menu);
 		return true;
 	}
 

@@ -4,128 +4,71 @@ import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
-import android.widget.TextView;
 
 import com.psapp.worldcupapp.adapters.PageAdapter;
 import com.viewpagerindicator.TitlePageIndicator;
 
-public class MainActivity extends FragmentActivity{
+public class MainActivity extends FragmentActivity {
 	private ViewPager vPager;
 	private PageAdapter pageAdapter;
-	private PagerTitleStrip pagerTitleStrip;
 	TitlePageIndicator mIndicator;
-	//private ActionBar actionBar;
-	
-	
-	private boolean isConnected;
 	private String[] tabs = { "Matches", "Results", "Table", "News" };
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
-		
-		
+
 		vPager = (ViewPager) findViewById(R.id.vpPager);
 		pageAdapter = new PageAdapter(getSupportFragmentManager());
 		vPager.setAdapter(pageAdapter);
 		vPager.setPageTransformer(true, new ZoomOutPageTransformer());
 		vPager.setOffscreenPageLimit(4);
-		
-		
-//		mIndicator = (TitlePageIndicator)findViewById(R.id.indicator);
-//        mIndicator.setViewPager(vPager);
-		
-		
-//		Parse.initialize(this, "UyBnXScZ9pB5z2aBDIzU57rh6smKbmGijjWICdzB", "konQzSGmn8EkI4VRlCZGPNzSC2xMM4eaa0o4um6g");
-		
-		// registering activity for push
-//		PushService.setDefaultPushCallback(this, MainActivity.class);
-//		ParseInstallation.getCurrentInstallation().saveInBackground();
-		
-		// track notification entry
-//		ParseAnalytics.trackAppOpened(getIntent());
-		
-		// test object
-//		ParseObject testObject = new ParseObject("TestObject");
-//		testObject.put("foo", "bar");
-//		testObject.saveInBackground();
-		
-		
-		
-		
-		
-//		
-		vPager.setOnPageChangeListener(
-	            new ViewPager.SimpleOnPageChangeListener() {
-	                @Override
-	                public void onPageSelected(int position) {
-	                    // When swiping between pages, select the
-	                    // corresponding tab.
-	                    getActionBar().setSelectedNavigationItem(position);
-	                }
-	            });
-	
+
+		vPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+			@Override
+			public void onPageSelected(int position) {
+				getActionBar().setSelectedNavigationItem(position);
+			}
+		});
 
 		final ActionBar actionBar = getActionBar();
 		actionBar.setIcon(R.drawable.football_256_white);
-		
-		int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
-		TextView abTitle = (TextView) findViewById(titleId);
-		
-	    // Specify that tabs should be displayed in the action bar.
-	    actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-	    // Create a tab listener that is called when the user changes tabs.
-	    ActionBar.TabListener tabListener = new ActionBar.TabListener() {
-	        public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-	            // show the given tab
-	        	// When the tab is selected, switch to the
-	            // corresponding page in the ViewPager.
-	            vPager.setCurrentItem(tab.getPosition());
-	        }
+		// Create a tab listener that is called when the user changes tabs.
+		ActionBar.TabListener tabListener = new ActionBar.TabListener() {
+			public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+				vPager.setCurrentItem(tab.getPosition());
+			}
 
-	        public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
-	            // hide the given tab
-	        }
+			public void onTabUnselected(ActionBar.Tab tab,
+					FragmentTransaction ft) {
+			}
 
-	        public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
-	            // probably ignore this event
-	        }
+			public void onTabReselected(ActionBar.Tab tab,
+					FragmentTransaction ft) {
+			}
+		};
 
-			
-	    };
-
-	    // Add 3 tabs, specifying the tab's text and TabListener
-	    for (int i = 0; i <= 3; i++) {
-	        actionBar.addTab(
-	                actionBar.newTab()
-	                        .setText(tabs[i])
-	                        .setTabListener(tabListener));
-	    }
-
-		
-		
+		// Add 3 tabs, specifying the tab's text and TabListener
+		for (int i = 0; i <= 3; i++) {
+			actionBar.addTab(actionBar.newTab().setText(tabs[i])
+					.setTabListener(tabListener));
+		}
 	}
-	
-	
+
 	@Override
 	public void onResume() {
-	    super.onResume();
+		super.onResume();
 	}
-	
-
-	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.timeline, menu);
+		getMenuInflater().inflate(R.menu.detail, menu);
 		return true;
 	}
-
-
 }

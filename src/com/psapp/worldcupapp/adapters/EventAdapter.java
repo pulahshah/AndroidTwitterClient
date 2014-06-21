@@ -4,19 +4,22 @@ import java.util.ArrayList;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Build;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView.FindListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.psapp.worldcupapp.R;
 import com.psapp.worldcupapp.Utilities;
 import com.psapp.worldcupapp.models.Events;
-import com.psapp.worldcupapp.models.Match;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class EventAdapter extends ArrayAdapter<Events> {
@@ -26,7 +29,8 @@ public class EventAdapter extends ArrayAdapter<Events> {
 		Log.d("DEBUG", "Logging all passed events");
 		for (Events e : events) {
 			Log.d("DEBUG",
-					e.getMinute() + " " + e.getName() + " " + e.getType());
+					e.getMinute() + " " + e.getName() + " " + e.getType()
+							+ " || " + e.getSide());
 		}
 	}
 
@@ -37,20 +41,15 @@ public class EventAdapter extends ArrayAdapter<Events> {
 		if (view == null) {
 			LayoutInflater inflater = (LayoutInflater) getContext()
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
+			
 			if (e.getSide().equals("home")) {
-
-//				Log.d("DEBUG", "Event side: " + e.getSide() );
-				
 				view = inflater.inflate(R.layout.item_event_temp_home, null);
+				
 			} else { // away
-				Log.d("DEBUG", "Event side: " + e.getSide() );
 				view = inflater.inflate(R.layout.item_event_temp_away, null);
 			}
 
 			String type = e.getType();
-			Match r = e.getMatch();
-
 			TextView tvEventTime = (TextView) view
 					.findViewById(R.id.tvEventTime);
 			tvEventTime.setText(e.getMinute() + "");
@@ -63,7 +62,6 @@ public class EventAdapter extends ArrayAdapter<Events> {
 			TextView tvEventName = (TextView) view
 					.findViewById(R.id.tvEventName);
 			tvEventName.setText(e.getName());
-
 		}
 
 		return view;
