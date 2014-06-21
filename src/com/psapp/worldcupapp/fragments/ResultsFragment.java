@@ -76,7 +76,7 @@ public class ResultsFragment extends Fragment {
 		page = getArguments().getInt("someInt", 2);
 		title = getArguments().getString("someTitle");
 		prevTime = 0;
-		Log.d("DEBUG", "results --- onCreate");
+//		Log.d("DEBUG", "results --- onCreate");
 	}
 	
 	private Crouton crouton;
@@ -104,7 +104,7 @@ public class ResultsFragment extends Fragment {
 
 	public void onResume() {
 		super.onResume();
-		Log.d("DEBUG", "results --- onResume");
+//		Log.d("DEBUG", "results --- onResume");
 
 		if (NetworkChecker.checkConnection(getActivity())) {
 			getResults("default");

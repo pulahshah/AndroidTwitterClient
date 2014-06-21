@@ -78,7 +78,7 @@ public class LiveScoreFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 		page = getArguments().getInt("someInt", 0);
 		title = getArguments().getString("someTitle");
-		Log.d("DEBUG", "live score --- onCreate");
+//		Log.d("DEBUG", "live score --- onCreate");
 	}
 	
 	
@@ -108,7 +108,7 @@ private Crouton crouton;
 	
 	public void onResume(){
 		super.onResume();
-		Log.d("DEBUG", "live score --- onResume");
+//		Log.d("DEBUG", "live score --- onResume");
 		
 		if(NetworkChecker.checkConnection(getActivity())){
 			getLiveScores();

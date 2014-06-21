@@ -18,8 +18,6 @@ public class PrettyDate {
 		DateTimeFormatter parser2 = ISODateTimeFormat.dateTimeNoMillis();
 		
 		LocalDateTime dt = parser2.parseDateTime(d).toLocalDateTime();
-		System.out.println("Local: " + dt.toString());
-		
 		
 		
 		int hour = dt.getHourOfDay();

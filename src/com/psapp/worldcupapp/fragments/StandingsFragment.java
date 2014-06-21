@@ -71,7 +71,7 @@ public class StandingsFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 		page = getArguments().getInt("someInt", 2);
 		title = getArguments().getString("someTitle");
-		Log.d("DEBUG", "standings --- onCreate");
+//		Log.d("DEBUG", "standings --- onCreate");
 	}
 
 	private Crouton crouton;
@@ -101,7 +101,7 @@ public class StandingsFragment extends Fragment {
 
 	public void onResume() {
 		super.onResume();
-		Log.d("DEBUG", "standings --- onResume");
+//		Log.d("DEBUG", "standings --- onResume");
 
 		if (NetworkChecker.checkConnection(getActivity())) {
 			getStandings();

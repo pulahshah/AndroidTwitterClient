@@ -65,7 +65,7 @@ public class NewsFragment extends Fragment {
 		page = getArguments().getInt("someInt", 3);
 		title = getArguments().getString("someTitle");
 
-		Log.d("DEBUG", "news --- onCreate");
+//		Log.d("DEBUG", "news --- onCreate");
 	}
 	
 	
@@ -93,7 +93,7 @@ public class NewsFragment extends Fragment {
 
 	public void onResume() {
 		super.onResume();
-		Log.d("DEBUG", "news --- onResume");
+//		Log.d("DEBUG", "news --- onResume");
 
 		if(NetworkChecker.checkConnection(getActivity())){
 			getNews();
