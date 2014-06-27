@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -165,8 +166,10 @@ public class ResultsFragment extends Fragment {
 							resultAdapter = new ResultsAdapter(ac, matches);
 							lvResults = (ListView) ac
 									.findViewById(R.id.lvResults);
+							Parcelable state = lvResults.onSaveInstanceState();
 							lvResults.setAdapter(resultAdapter);
 							resultAdapter.notifyDataSetChanged();
+							lvResults.onRestoreInstanceState(state);
 							lvResults
 									.setOnItemClickListener(new OnItemClickListener() {
 										@Override

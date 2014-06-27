@@ -13,6 +13,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -191,9 +192,11 @@ public class LiveScoreFragment extends Fragment {
 						
 						if(ac != null && !ac.isFinishing()){
 							lvLiveScores = (ListView) ac.findViewById(R.id.lvLiveScore);
+							Parcelable state = lvLiveScores.onSaveInstanceState();
 							liveAdapter = new LiveAdapter(ac, matches);
 							lvLiveScores.setAdapter(liveAdapter);
 							liveAdapter.notifyDataSetChanged();
+							lvLiveScores.onRestoreInstanceState(state);
 							lvLiveScores
 									.setOnItemClickListener(new OnItemClickListener() {
 										@Override

@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -133,7 +134,10 @@ public class NewsFragment extends Fragment {
 							newsAdapter = new NewsAdapter(getActivity(), news);
 							final ListView lvNews = (ListView) getActivity()
 									.findViewById(R.id.lvNews);
+							Parcelable state = lvNews.onSaveInstanceState();
 							lvNews.setAdapter(newsAdapter);
+							newsAdapter.notifyDataSetChanged();
+							lvNews.onRestoreInstanceState(state);
 
 							lvNews.setOnItemClickListener(new OnItemClickListener() {
 								@Override
