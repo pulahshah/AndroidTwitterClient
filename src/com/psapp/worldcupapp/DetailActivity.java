@@ -105,13 +105,10 @@ public class DetailActivity extends Activity {
 	}
 
 	private void displayEvents(ArrayList<Events> updatedEvent) {
-//		Log.d("DEBUG", "display events called --------------");
-
 		ListView lvEvents = (ListView) findViewById(R.id.lvEvents);
 		eventAdapter = new EventAdapter(this, updatedEvent);
 		eventAdapter.notifyDataSetChanged();
 		lvEvents.setAdapter(eventAdapter);
-
 	}
 
 	private ArrayList<Events> loadEvents(Match r) {
@@ -120,7 +117,6 @@ public class DetailActivity extends Activity {
 		for (Entry<Integer, ArrayList<String[]>> entry : map.entrySet()) {
 
 			ArrayList<String[]> value = entry.getValue();
-			// Log.d("DEBUG", "**********************************");
 			for (int i = 0; i < value.size(); i++) {
 				Events e = new Events();
 				String[] tuple = value.get(i);
@@ -189,8 +185,6 @@ public class DetailActivity extends Activity {
 
 						ArrayList<Match> matches = Match.fromJson(liveJson,
 								"live");
-						// Log.d("DEBUG", "Matches being returned --- " +
-						// matches.size() );
 
 						for (Match m : matches) {
 							setupActionBar(m.getHomeTeam(), m.getAwayTeam(),
@@ -198,13 +192,11 @@ public class DetailActivity extends Activity {
 									m.getAwayScore());
 							updateHeader(m);
 
-						}
-						if (r != null) {
 							ArrayList<Events> e = new ArrayList<Events>();
-//							e = loadEvents(r);
+//							e = loadEvents(m);
 //							displayEvents(e);
 						}
-
+						
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

@@ -76,6 +76,7 @@ public class LiveScoreFragment extends Fragment {
 	}
 
 	public void onCreate(Bundle savedInstanceState) {
+		Log.d("DEBUG", "LF onCreate");
 		super.onCreate(savedInstanceState);
 		page = getArguments().getInt("someInt", 0);
 		title = getArguments().getString("someTitle");
@@ -106,6 +107,7 @@ public class LiveScoreFragment extends Fragment {
 	}
 
 	public void onResume() {
+		Log.d("DEBUG", "LF onResume");
 		super.onResume();
 		if (NetworkChecker.checkConnection(getActivity())) {
 			getLiveScores();
@@ -141,6 +143,7 @@ public class LiveScoreFragment extends Fragment {
 	}
 
 	public static void getLiveScores() {
+		Log.d("DEBUG", "LF get live scores called");
 		fixturesJson = new JSONArray();
 		matches = new ArrayList<Match>();
 		String url = URL + FootballClient.LIVE_URL + ".json";
@@ -176,6 +179,7 @@ public class LiveScoreFragment extends Fragment {
 	}
 
 	public void getFixtures() {
+		Log.d("DEBUG", "LF get fixtures scores called");
 		String url = URL + "/fixtureswc.json";
 		client.get(url, new JsonHttpResponseHandler() {
 			public void onSuccess(int code, JSONObject json) {
