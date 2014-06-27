@@ -31,7 +31,6 @@ public class EventAdapter extends ArrayAdapter<Events> {
 	}
 
 	public View getView(int position, View view, ViewGroup parent) {
-
 		Events e = getItem(position);
 		view = null;
 		if (view == null) {
