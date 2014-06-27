@@ -79,19 +79,21 @@ public class DetailActivity extends Activity {
 
 		TextView group = (TextView) findViewById(R.id.tvGroup);
 		group.setText(r.getGroup());
+		if(r.getGroup() != ""){
+			Log.d("DEBUG", "Hi  " +r.getLiveTime());
+		}
 
 		ImageView ivDot = (ImageView) findViewById(R.id.ivDot);
+		ivDot.setVisibility(View.GONE);
+		
 		TextView tvLiveTime = (TextView) findViewById(R.id.tvLiveTime);
 		String tmp = r.getLiveTime();
 
-		if (tmp.equalsIgnoreCase("finished")) {
-			// tmp = "Full-time";
-			ivDot.setVisibility(View.GONE);
+		if (tmp.equalsIgnoreCase("finished") || tmp.equals("")) {
 			tmp = PrettyDate.getPrettyDate(r.getDate());
 		} else if (tmp.equalsIgnoreCase("not started")
 				|| tmp.equalsIgnoreCase("notstarted")) {
 			tmp = PrettyDate.getPrettyTime(r.getDate(), true);
-			ivDot.setVisibility(View.GONE);
 		} else if (tmp.equalsIgnoreCase("Halftime")
 				|| tmp.equalsIgnoreCase("Half time")) {
 			tmp = "Half-time";
@@ -99,13 +101,13 @@ public class DetailActivity extends Activity {
 		} else {
 			// increase size to display live time
 			tvLiveTime.setTextSize(20);
+			ivDot.setVisibility(View.VISIBLE);
 		}
-
 		tvLiveTime.setText(tmp);
 	}
 
 	private void displayEvents(ArrayList<Events> updatedEvent) {
-		Log.d("DEBUG", "display events called --------------");
+//		Log.d("DEBUG", "display events called --------------");
 
 		ListView lvEvents = (ListView) findViewById(R.id.lvEvents);
 		eventAdapter = new EventAdapter(this, updatedEvent);
@@ -176,7 +178,7 @@ public class DetailActivity extends Activity {
 
 	private void fetchLiveUpdates() {
 		final JSONArray liveJson = new JSONArray();
-		String url = URL + "/livescorestemp/" + matchId + ".json";
+		String url = URL + "/livescores/" + matchId + ".json";
 		client.get(url, new AsyncHttpResponseHandler() {
 
 			public void onSuccess(String json) {
@@ -238,7 +240,7 @@ public class DetailActivity extends Activity {
 		if (caller != null && caller.equalsIgnoreCase("results")) {
 			return true;
 		}
-		getMenuInflater().inflate(R.menu.detail, menu);
+		getMenuInflater().inflate(R.menu.menu, menu);
 		return true;
 	}
 

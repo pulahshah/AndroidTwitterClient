@@ -4,17 +4,12 @@ import java.util.ArrayList;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Build;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView.FindListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.psapp.worldcupapp.R;
@@ -25,13 +20,14 @@ import com.psapp.worldcupapp.models.Events;
 public class EventAdapter extends ArrayAdapter<Events> {
 	public EventAdapter(Context context, ArrayList<Events> events) {
 		super(context, 0, events);
-
+/*
 		Log.d("DEBUG", "Logging all passed events");
 		for (Events e : events) {
 			Log.d("DEBUG",
 					e.getMinute() + " " + e.getName() + " " + e.getType()
 							+ " || " + e.getSide());
 		}
+*/		
 	}
 
 	public View getView(int position, View view, ViewGroup parent) {

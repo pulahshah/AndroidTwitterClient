@@ -4,13 +4,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.TreeMap;
 
-import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -19,6 +18,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,7 @@ import android.widget.ListView;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.psapp.worldcupapp.DetailActivity;
+import com.psapp.worldcupapp.MainActivity;
 import com.psapp.worldcupapp.NetworkChecker;
 import com.psapp.worldcupapp.R;
 import com.psapp.worldcupapp.adapters.ResultsAdapter;
@@ -48,17 +50,19 @@ public class ResultsFragment extends Fragment {
 	private int page;
 	long requestTime;
 	long prevTime;
+	static ResultsFragment rf;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceBundle) {
 		View view = inflater.inflate(R.layout.fragment_results, container,
 				false);
 		setHasOptionsMenu(true);
+
 		return view;
 	}
 
 	public static ResultsFragment newInstance(int page, String title) {
-		ResultsFragment rf = new ResultsFragment();
+		rf = new ResultsFragment();
 		Bundle b = new Bundle();
 		b.putInt("someInt", page);
 		b.putString("someTitle", title);
@@ -76,43 +80,41 @@ public class ResultsFragment extends Fragment {
 		page = getArguments().getInt("someInt", 2);
 		title = getArguments().getString("someTitle");
 		prevTime = 0;
-//		Log.d("DEBUG", "results --- onCreate");
 	}
-	
+
 	private Crouton crouton;
-	public boolean checkConnection(){
-		ConnectivityManager cm =
-		        (ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-		 
+
+	public boolean checkConnection() {
+		ConnectivityManager cm = (ConnectivityManager) getActivity()
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
+
 		NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-		return (activeNetwork != null && activeNetwork.isConnectedOrConnecting());
+		return (activeNetwork != null && activeNetwork
+				.isConnectedOrConnecting());
 	}
-	
-	
-	public void showCrouton(){
-		crouton = Crouton.makeText(getActivity(), "No network connection", Style.ALERT)
-			    .setConfiguration(new Configuration.Builder().setDuration(Configuration.DURATION_LONG).build());
+
+	public void showCrouton() {
+		crouton = Crouton.makeText(getActivity(), "No network connection",
+				Style.ALERT).setConfiguration(
+				new Configuration.Builder().setDuration(
+						Configuration.DURATION_LONG).build());
 		crouton.show();
 	}
-	
-	public void hideCrouton(){
-		if(crouton != null){
+
+	public void hideCrouton() {
+		if (crouton != null) {
 			crouton.hide();
 		}
 	}
-	
 
 	public void onResume() {
 		super.onResume();
-//		Log.d("DEBUG", "results --- onResume");
-
 		if (NetworkChecker.checkConnection(getActivity())) {
 			getResults("default");
 			NetworkChecker.hideCrouton();
 		} else {
 			NetworkChecker.showCrouton(getActivity());
 		}
-		
 	}
 
 	public ResultsAdapter getAdapter() {
@@ -156,31 +158,35 @@ public class ResultsFragment extends Fragment {
 
 					Collections.sort(matches, Match.MatchDateComparator);
 
-					resultAdapter = new ResultsAdapter(getActivity(), matches);
-					lvResults = (ListView) getActivity().findViewById(
-							R.id.lvResults);
+					if (rf != null && !(rf.isDetached() || rf.isRemoving())) {
+						Activity ac = (MainActivity) getActivity();
 
-					lvResults.setAdapter(resultAdapter);
-					lvResults.setOnItemClickListener(new OnItemClickListener() {
+						if (ac != null && !ac.isFinishing()) {
+							resultAdapter = new ResultsAdapter(ac, matches);
+							lvResults = (ListView) ac
+									.findViewById(R.id.lvResults);
+							lvResults.setAdapter(resultAdapter);
+							resultAdapter.notifyDataSetChanged();
+							lvResults
+									.setOnItemClickListener(new OnItemClickListener() {
+										@Override
+										public void onItemClick(
+												AdapterView<?> parent,
+												View view, int position, long id) {
 
-						@Override
-						public void onItemClick(AdapterView<?> parent,
-								View view, int position, long id) {
+											Match match = (Match) lvResults
+													.getItemAtPosition(position);
 
-							Match match = (Match) lvResults
-									.getItemAtPosition(position);
-							// Log.d("DEBUG",
-							// tempResult.getHomeTeam().toString());
-
-							Intent intent = new Intent(getActivity(),
-									DetailActivity.class);
-							intent.putExtra("temp", match);
-							intent.putExtra("caller", "results");
-							startActivity(intent);
-
+											Intent intent = new Intent(
+													getActivity(),
+													DetailActivity.class);
+											intent.putExtra("temp", match);
+											intent.putExtra("caller", "results");
+											startActivity(intent);
+										}
+									});
 						}
-
-					});
+					}
 
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
@@ -195,16 +201,21 @@ public class ResultsFragment extends Fragment {
 		});
 	}
 
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.menu, menu);
+		super.onCreateOptionsMenu(menu, inflater);
+	}
+
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
 		case R.id.refresh:
-			
-			if(NetworkChecker.checkConnection(getActivity())){
+
+			if (NetworkChecker.checkConnection(getActivity())) {
 				getResults("refresh");
 				NetworkChecker.hideCrouton();
-			}
-			else{
+			} else {
 				NetworkChecker.showCrouton(getActivity());
 			}
 			return true;

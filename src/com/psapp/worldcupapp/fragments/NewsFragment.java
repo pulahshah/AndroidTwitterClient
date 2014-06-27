@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.json.JSONArray;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -12,6 +13,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +24,7 @@ import android.widget.ListView;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.psapp.worldcupapp.MainActivity;
 import com.psapp.worldcupapp.NetworkChecker;
 import com.psapp.worldcupapp.R;
 import com.psapp.worldcupapp.WebViewActivity;
@@ -38,6 +42,7 @@ public class NewsFragment extends Fragment {
 	ArrayList<News> news;
 	private String title;
 	private int page;
+	static NewsFragment nf;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceBundle) {
@@ -47,7 +52,7 @@ public class NewsFragment extends Fragment {
 	}
 
 	public static NewsFragment newInstance(int page, String title) {
-		NewsFragment nf = new NewsFragment();
+		nf = new NewsFragment();
 		Bundle b = new Bundle();
 		b.putInt("someInt", page);
 		b.putString("someTitle", title);
@@ -117,30 +122,37 @@ public class NewsFragment extends Fragment {
 				news = new ArrayList<News>();
 				try {
 					JSONArray newsArray = new JSONArray(json);
-
 					for (int i = 0; i < newsArray.length(); i++) {
 						news = News.fromJson(newsArray);
 					}
 
-					newsAdapter = new NewsAdapter(getActivity(), news);
-					final ListView lvNews = (ListView) getActivity()
-							.findViewById(R.id.lvNews);
-					lvNews.setAdapter(newsAdapter);
+					
+					if (nf != null && !(nf.isDetached() || nf.isRemoving())) {
+						Activity ac = (MainActivity) getActivity();
+						if(ac != null && !ac.isFinishing()){
+							newsAdapter = new NewsAdapter(getActivity(), news);
+							final ListView lvNews = (ListView) getActivity()
+									.findViewById(R.id.lvNews);
+							lvNews.setAdapter(newsAdapter);
 
-					lvNews.setOnItemClickListener(new OnItemClickListener() {
-						@Override
-						public void onItemClick(AdapterView<?> parent,
-								View view, int position, long id) {
-							Intent intent = new Intent(getActivity(),
-									WebViewActivity.class);
+							lvNews.setOnItemClickListener(new OnItemClickListener() {
+								@Override
+								public void onItemClick(AdapterView<?> parent,
+										View view, int position, long id) {
+									Intent intent = new Intent(getActivity(),
+											WebViewActivity.class);
 
-							News n = (News) lvNews.getItemAtPosition(position);
+									News n = (News) lvNews.getItemAtPosition(position);
 
-							String url = n.getLink();
-							intent.putExtra("url", url);
-							startActivity(intent);
+									String url = n.getLink();
+									intent.putExtra("url", url);
+									startActivity(intent);
+								}
+							});
 						}
-					});
+					}
+					
+					
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -152,6 +164,12 @@ public class NewsFragment extends Fragment {
 				Log.d("NETWORK", "failure");
 			}
 		});
+	}
+	
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+	    inflater.inflate(R.menu.menu, menu);
+	    super.onCreateOptionsMenu(menu,inflater);
 	}
 
 	public boolean onOptionsItemSelected(MenuItem item) {

@@ -10,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -17,6 +18,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +27,7 @@ import android.widget.ListView;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.psapp.worldcupapp.MainActivity;
 import com.psapp.worldcupapp.NetworkChecker;
 import com.psapp.worldcupapp.R;
 import com.psapp.worldcupapp.adapters.StandingsAdapter;
@@ -41,6 +45,7 @@ public class StandingsFragment extends Fragment {
 	ArrayList<Standing> standingsFinal;
 	private String title;
 	private int page;
+	static StandingsFragment sf;
 
 	TreeMap<Integer, ArrayList<Standing>> map;
 
@@ -53,7 +58,7 @@ public class StandingsFragment extends Fragment {
 	}
 
 	public static StandingsFragment newInstance(int page, String title) {
-		StandingsFragment sf = new StandingsFragment();
+		sf = new StandingsFragment();
 		Bundle b = new Bundle();
 		b.putInt("someInt", page);
 		b.putString("someTitle", title);
@@ -71,7 +76,7 @@ public class StandingsFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 		page = getArguments().getInt("someInt", 2);
 		title = getArguments().getString("someTitle");
-//		Log.d("DEBUG", "standings --- onCreate");
+		// Log.d("DEBUG", "standings --- onCreate");
 	}
 
 	private Crouton crouton;
@@ -101,7 +106,7 @@ public class StandingsFragment extends Fragment {
 
 	public void onResume() {
 		super.onResume();
-//		Log.d("DEBUG", "standings --- onResume");
+		// Log.d("DEBUG", "standings --- onResume");
 
 		if (NetworkChecker.checkConnection(getActivity())) {
 			getStandings();
@@ -146,21 +151,21 @@ public class StandingsFragment extends Fragment {
 																// array
 
 							}
-
 						}
-
 					}
 
 					standings = Standing.fromJson(inGroupJson);
-
 					sortStandings(standings);
 
-					standingsAdapter = new StandingsAdapter(getActivity(),
-							standingsFinal);
-					final ListView lvStandings = (ListView) getActivity()
-							.findViewById(R.id.lvStandings);
-					lvStandings.setAdapter(standingsAdapter);
-
+					if (sf != null && !(sf.isDetached() || sf.isRemoving())) {
+						Activity ac = (MainActivity) getActivity();
+						if(ac != null && !ac.isFinishing()){
+							standingsAdapter = new StandingsAdapter(ac,
+									standingsFinal);
+							final ListView lvStandings = (ListView) ac.findViewById(R.id.lvStandings);
+							lvStandings.setAdapter(standingsAdapter);
+						}
+					}
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -197,6 +202,12 @@ public class StandingsFragment extends Fragment {
 			standingsFinal.addAll(value);
 		}
 
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.menu, menu);
+		super.onCreateOptionsMenu(menu, inflater);
 	}
 
 	public boolean onOptionsItemSelected(MenuItem item) {

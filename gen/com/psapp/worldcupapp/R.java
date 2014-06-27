@@ -445,30 +445,31 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int progress_secondary_example=0x7f02005e;
         public static final int red_220=0x7f02005f;
         public static final int red_72=0x7f020060;
-        public static final int selectable_background_example=0x7f020061;
-        public static final int spinner_ab_default_example=0x7f020062;
-        public static final int spinner_ab_disabled_example=0x7f020063;
-        public static final int spinner_ab_focused_example=0x7f020064;
-        public static final int spinner_ab_pressed_example=0x7f020065;
-        public static final int spinner_background_ab_example=0x7f020066;
-        public static final int sub_in=0x7f020067;
-        public static final int sub_out=0x7f020068;
-        public static final int tab_indicator_ab_example=0x7f020069;
-        public static final int tab_selected_example=0x7f02006a;
-        public static final int tab_selected_focused_example=0x7f02006b;
-        public static final int tab_selected_pressed_example=0x7f02006c;
-        public static final int tab_unselected_example=0x7f02006d;
-        public static final int tab_unselected_focused_example=0x7f02006e;
-        public static final int tab_unselected_pressed_example=0x7f02006f;
-        public static final int vpi__tab_indicator=0x7f020070;
-        public static final int vpi__tab_selected_focused_holo=0x7f020071;
-        public static final int vpi__tab_selected_holo=0x7f020072;
-        public static final int vpi__tab_selected_pressed_holo=0x7f020073;
-        public static final int vpi__tab_unselected_focused_holo=0x7f020074;
-        public static final int vpi__tab_unselected_holo=0x7f020075;
-        public static final int vpi__tab_unselected_pressed_holo=0x7f020076;
-        public static final int yellow_220=0x7f020077;
-        public static final int yellow_72=0x7f020078;
+        public static final int rotation_refresh=0x7f020061;
+        public static final int selectable_background_example=0x7f020062;
+        public static final int spinner_ab_default_example=0x7f020063;
+        public static final int spinner_ab_disabled_example=0x7f020064;
+        public static final int spinner_ab_focused_example=0x7f020065;
+        public static final int spinner_ab_pressed_example=0x7f020066;
+        public static final int spinner_background_ab_example=0x7f020067;
+        public static final int sub_in=0x7f020068;
+        public static final int sub_out=0x7f020069;
+        public static final int tab_indicator_ab_example=0x7f02006a;
+        public static final int tab_selected_example=0x7f02006b;
+        public static final int tab_selected_focused_example=0x7f02006c;
+        public static final int tab_selected_pressed_example=0x7f02006d;
+        public static final int tab_unselected_example=0x7f02006e;
+        public static final int tab_unselected_focused_example=0x7f02006f;
+        public static final int tab_unselected_pressed_example=0x7f020070;
+        public static final int vpi__tab_indicator=0x7f020071;
+        public static final int vpi__tab_selected_focused_holo=0x7f020072;
+        public static final int vpi__tab_selected_holo=0x7f020073;
+        public static final int vpi__tab_selected_pressed_holo=0x7f020074;
+        public static final int vpi__tab_unselected_focused_holo=0x7f020075;
+        public static final int vpi__tab_unselected_holo=0x7f020076;
+        public static final int vpi__tab_unselected_pressed_holo=0x7f020077;
+        public static final int yellow_220=0x7f020078;
+        public static final int yellow_72=0x7f020079;
     }
     public static final class id {
         public static final int bottom=0x7f040003;
@@ -531,18 +532,19 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int fragment_news=0x7f030003;
         public static final int fragment_results=0x7f030004;
         public static final int fragment_standings=0x7f030005;
-        public static final int item_event_temp_away=0x7f030006;
-        public static final int item_event_temp_home=0x7f030007;
-        public static final int item_live=0x7f030008;
-        public static final int item_news=0x7f030009;
-        public static final int item_result=0x7f03000a;
-        public static final int item_score=0x7f03000b;
-        public static final int item_standing=0x7f03000c;
-        public static final int item_standing_header=0x7f03000d;
-        public static final int webview=0x7f03000e;
+        public static final int indeterminate_progress_action=0x7f030006;
+        public static final int item_event_temp_away=0x7f030007;
+        public static final int item_event_temp_home=0x7f030008;
+        public static final int item_live=0x7f030009;
+        public static final int item_news=0x7f03000a;
+        public static final int item_result=0x7f03000b;
+        public static final int item_score=0x7f03000c;
+        public static final int item_standing=0x7f03000d;
+        public static final int item_standing_header=0x7f03000e;
+        public static final int webview=0x7f03000f;
     }
     public static final class menu {
-        public static final int detail=0x7f0b0000;
+        public static final int menu=0x7f0b0000;
     }
     public static final class string {
         public static final int action_refresh=0x7f0a0002;
