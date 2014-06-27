@@ -1,7 +1,6 @@
 package com.psapp.worldcupapp.fragments;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Iterator;
 
@@ -49,9 +48,9 @@ public class ResultsFragment extends Fragment {
 	ListView lvResults;
 	private String title;
 	private int page;
-	long requestTime;
-	long prevTime;
 	static ResultsFragment rf;
+	long currTime;
+	long prevTime;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceBundle) {
@@ -80,7 +79,6 @@ public class ResultsFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 		page = getArguments().getInt("someInt", 2);
 		title = getArguments().getString("someTitle");
-		prevTime = 0;
 	}
 
 	private Crouton crouton;
@@ -116,6 +114,8 @@ public class ResultsFragment extends Fragment {
 		} else {
 			NetworkChecker.showCrouton(getActivity());
 		}
+		currTime = System.currentTimeMillis();
+		prevTime = System.currentTimeMillis();
 	}
 
 	public ResultsAdapter getAdapter() {
@@ -123,24 +123,11 @@ public class ResultsFragment extends Fragment {
 	}
 
 	public void getResults(String caller) {
-		requestTime = Calendar.getInstance().getTimeInMillis();
-
-		// if(caller.equals("refresh")){
-		// makeCall();
-		// }
-		// else if (requestTime - prevTime > 300000) {
-		// makeCall();
-		//
-		// } else {
-		// Log.d("DEBUG", "Not too soon!");
-		// }
-
 		makeCall();
-
-		prevTime = requestTime;
 	}
 
 	private void makeCall() {
+		Log.d("DEBUG", "fetching results");
 		matches = new ArrayList<Match>();
 		String url = URL + "/historicalscores.json";
 		client.get(url, new AsyncHttpResponseHandler() {
@@ -214,9 +201,12 @@ public class ResultsFragment extends Fragment {
 		// Handle item selection
 		switch (item.getItemId()) {
 		case R.id.refresh:
-
 			if (NetworkChecker.checkConnection(getActivity())) {
-				getResults("refresh");
+				currTime = System.currentTimeMillis();
+				if(prevTime + 3000 < currTime){
+					getResults("refresh");
+				}
+				prevTime = currTime;
 				NetworkChecker.hideCrouton();
 			} else {
 				NetworkChecker.showCrouton(getActivity());

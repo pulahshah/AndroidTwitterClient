@@ -46,6 +46,8 @@ public class StandingsFragment extends Fragment {
 	private String title;
 	private int page;
 	static StandingsFragment sf;
+	long currTime;
+	long prevTime;
 
 	TreeMap<Integer, ArrayList<Standing>> map;
 
@@ -106,15 +108,14 @@ public class StandingsFragment extends Fragment {
 
 	public void onResume() {
 		super.onResume();
-		// Log.d("DEBUG", "standings --- onResume");
-
 		if (NetworkChecker.checkConnection(getActivity())) {
 			getStandings();
 			NetworkChecker.hideCrouton();
 		} else {
 			NetworkChecker.showCrouton(getActivity());
 		}
-
+		currTime = System.currentTimeMillis();
+		prevTime = System.currentTimeMillis();
 	}
 
 	public StandingsAdapter getAdapter() {
@@ -122,6 +123,7 @@ public class StandingsFragment extends Fragment {
 	}
 
 	public void getStandings() {
+		Log.d("DEBUG", "fetching standings");
 		standings = new ArrayList<Standing>();
 		standingsFinal = new ArrayList<Standing>();
 		map = new TreeMap<Integer, ArrayList<Standing>>();
@@ -179,7 +181,6 @@ public class StandingsFragment extends Fragment {
 	}
 
 	public void sortStandings(ArrayList<Standing> s) {
-
 		for (int i = 0; i < s.size(); i++) {
 			int groupid = Integer.parseInt(s.get(i).getGroupId());
 			ArrayList<Standing> temp;
@@ -192,16 +193,12 @@ public class StandingsFragment extends Fragment {
 			map.put(groupid, temp);
 		}
 
-		//
 		for (Map.Entry<Integer, ArrayList<Standing>> entry : map.entrySet()) {
 			Integer key = entry.getKey();
 			ArrayList<Standing> value = entry.getValue();
-
 			Collections.sort(value, Standing.StandingComparator);
-
 			standingsFinal.addAll(value);
 		}
-
 	}
 
 	@Override
@@ -214,9 +211,12 @@ public class StandingsFragment extends Fragment {
 		// Handle item selection
 		switch (item.getItemId()) {
 		case R.id.refresh:
-
 			if (NetworkChecker.checkConnection(getActivity())) {
-				getStandings();
+				currTime = System.currentTimeMillis();
+				if(prevTime + 3000 < currTime){
+					getStandings();
+				}
+				prevTime = currTime;
 				NetworkChecker.hideCrouton();
 			} else {
 				NetworkChecker.showCrouton(getActivity());

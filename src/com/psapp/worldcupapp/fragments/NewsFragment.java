@@ -44,6 +44,8 @@ public class NewsFragment extends Fragment {
 	private String title;
 	private int page;
 	static NewsFragment nf;
+	long currTime;
+	long prevTime;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceBundle) {
@@ -108,7 +110,8 @@ public class NewsFragment extends Fragment {
 		else{
 			NetworkChecker.showCrouton(getActivity());
 		}
-		
+		currTime = System.currentTimeMillis();
+		prevTime = System.currentTimeMillis();
 	}
 
 	public NewsAdapter getAdapter() {
@@ -116,7 +119,7 @@ public class NewsFragment extends Fragment {
 	}
 
 	public void getNews() {
-		
+		Log.d("DEBUG", "fetching news");
 		String url = URL + "/news.json";
 		client.get(url, new AsyncHttpResponseHandler() {
 			public void onSuccess(String json) {
@@ -181,7 +184,11 @@ public class NewsFragment extends Fragment {
 		switch (item.getItemId()) {
 		case R.id.refresh:
 			if(NetworkChecker.checkConnection(getActivity())){
-				getNews();
+				currTime = System.currentTimeMillis();
+				if(prevTime + 5000 < currTime){
+					getNews();
+				}
+				prevTime = currTime;
 				NetworkChecker.hideCrouton();
 			}
 			else{

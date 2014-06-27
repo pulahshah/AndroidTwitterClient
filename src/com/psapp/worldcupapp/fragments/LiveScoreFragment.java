@@ -45,16 +45,15 @@ public class LiveScoreFragment extends Fragment {
 	// ScoresAdapter scoreAdapter;
 	LiveAdapter liveAdapter;
 	public static final String URL = "https://wcfootball.firebaseio.com";
-	static AsyncHttpClient client = new AsyncHttpClient();
-	static ArrayList<Match> matches;
-	static JSONArray fixturesJson;
-	ListView lvLiveScores;
+	AsyncHttpClient client = new AsyncHttpClient();
 	private String title;
 	private int page;
 	private Crouton crouton;
 	static LiveScoreFragment lsf;
+	long currTime;
+	long prevTime;
 	
-	
+
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceBundle) {
 		View view = inflater.inflate(R.layout.fragment_live, container, false);
@@ -111,49 +110,22 @@ public class LiveScoreFragment extends Fragment {
 		super.onResume();
 		if (NetworkChecker.checkConnection(getActivity())) {
 			getLiveScores();
-			getFixtures();
 			NetworkChecker.hideCrouton();
 		} else {
 			NetworkChecker.showCrouton(getActivity());
 		}
-
-		final Handler mHandler = new Handler();
-
-		// new Thread(new Runnable() {
-		// @Override
-		// public void run() {
-		// // TODO Auto-generated method stub
-		// while (true) {
-		// try {
-		// Thread.sleep(15000);
-		// mHandler.post(new Runnable() {
-		//
-		// @Override
-		// public void run() {
-		// LiveScoreFragment.getLiveScores();
-		// getFixtures();
-		// }
-		// });
-		// } catch (Exception e) {
-		// // TODO: handle exception
-		// }
-		// }
-		// }
-		// }).start();
+		currTime = System.currentTimeMillis();
+		prevTime = System.currentTimeMillis();
 	}
 
-	public static void getLiveScores() {
+	public void getLiveScores() {
 		Log.d("DEBUG", "LF get live scores called");
-		fixturesJson = new JSONArray();
-		matches = new ArrayList<Match>();
+		final JSONArray fixturesJson = new JSONArray();
 		String url = URL + FootballClient.LIVE_URL + ".json";
 		client.get(url, new AsyncHttpResponseHandler() {
-
 			public void onSuccess(String json) {
-
 				if (!json.equals("null")) {
 					try {
-
 						JSONObject obj = new JSONObject(json);
 						Iterator<?> keys = obj.keys();
 						while (keys.hasNext()) {
@@ -168,7 +140,7 @@ public class LiveScoreFragment extends Fragment {
 				} else {
 					Log.d("DEBUG", "No live matches");
 				}
-
+				getFixtures(fixturesJson);
 			}
 
 			@Override
@@ -178,54 +150,19 @@ public class LiveScoreFragment extends Fragment {
 		});
 	}
 
-	public void getFixtures() {
+	public void getFixtures(JSONArray live) {
+		final JSONArray fixJson = live;
 		Log.d("DEBUG", "LF get fixtures scores called");
-		String url = URL + "/fixtureswc.json";
-		client.get(url, new JsonHttpResponseHandler() {
+		String url_fixtures = URL + "/fixtureswc.json";
+		client.get(url_fixtures, new JsonHttpResponseHandler() {
 			public void onSuccess(int code, JSONObject json) {
 				try {
 					JSONArray temp = json.getJSONArray("table");
 					for (int i = 0; i < temp.length(); i++) {
-						fixturesJson.put(temp.get(i));
+						fixJson.put(temp.get(i));
 					}
-					matches = Match.fromJson(fixturesJson, "fixtures");
-
-					if (lsf != null
-							&& !(lsf.isDetached() || lsf.isRemoving())) {
-						Activity ac = (MainActivity) getActivity();
-						
-						if(ac != null && !ac.isFinishing()){
-							lvLiveScores = (ListView) ac.findViewById(R.id.lvLiveScore);
-							Parcelable state = lvLiveScores.onSaveInstanceState();
-							liveAdapter = new LiveAdapter(ac, matches);
-							lvLiveScores.setAdapter(liveAdapter);
-							liveAdapter.notifyDataSetChanged();
-							lvLiveScores.onRestoreInstanceState(state);
-							lvLiveScores
-									.setOnItemClickListener(new OnItemClickListener() {
-										@Override
-										public void onItemClick(
-												AdapterView<?> parent, View view,
-												int position, long id) {
-
-											Match f = (Match) lvLiveScores
-													.getItemAtPosition(position);
-											if (f.getLiveTime().equals("")) {
-
-											} else {
-												Intent intent = new Intent(
-														getActivity(),
-														DetailActivity.class);
-
-												intent.putExtra("temp", f);
-												intent.putExtra("caller", "live");
-												startActivity(intent);
-											}
-
-										}
-									});
-						}
-					}
+					ArrayList<Match> matches = Match.fromJson(fixJson, "fixtures");
+					displayMatches(matches);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -238,21 +175,35 @@ public class LiveScoreFragment extends Fragment {
 		});
 	}
 
-	protected MenuItem refreshItem = null;
+	public void displayMatches(ArrayList<Match> matches) {
+		if (lsf != null && !(lsf.isDetached() || lsf.isRemoving())) {
+			Activity ac = (MainActivity) getActivity();
+			if (ac != null && !ac.isFinishing()) {
+				final ListView lvLiveScores = (ListView) ac.findViewById(R.id.lvLiveScore);
+				Parcelable state = lvLiveScores.onSaveInstanceState();
+				liveAdapter = new LiveAdapter(ac, matches);
+				lvLiveScores.setAdapter(liveAdapter);
+				liveAdapter.notifyDataSetChanged();
+				lvLiveScores.onRestoreInstanceState(state);
+				lvLiveScores.setOnItemClickListener(new OnItemClickListener() {
+					@Override
+					public void onItemClick(AdapterView<?> parent, View view,
+							int position, long id) {
 
-	protected void setRefreshItem(MenuItem item) {
-		refreshItem = item;
-	}
+						Match f = (Match) lvLiveScores
+								.getItemAtPosition(position);
+						if (f.getLiveTime().equals("")) {
 
-	public void stopRefresh() {
-		if (refreshItem != null) {
-			refreshItem.setActionView(null);
-		}
-	}
-
-	public void runRefresh() {
-		if (refreshItem != null) {
-			refreshItem.setActionView(R.layout.indeterminate_progress_action);
+						} else {
+							Intent intent = new Intent(getActivity(),
+									DetailActivity.class);
+							intent.putExtra("temp", f);
+							intent.putExtra("caller", "live");
+							startActivity(intent);
+						}
+					}
+				});
+			}
 		}
 	}
 
@@ -262,14 +213,19 @@ public class LiveScoreFragment extends Fragment {
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 
+	
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
 		case R.id.refresh:
 			if (NetworkChecker.checkConnection(getActivity())) {
-				getLiveScores();
-				getFixtures();
+				currTime = System.currentTimeMillis();
+				if(prevTime + 2000 < currTime){
+					getLiveScores();
+				}
+				prevTime = currTime;
 				NetworkChecker.hideCrouton();
 			} else {
 				NetworkChecker.showCrouton(getActivity());
@@ -279,5 +235,4 @@ public class LiveScoreFragment extends Fragment {
 			return super.onOptionsItemSelected(item);
 		}
 	}
-
 }
