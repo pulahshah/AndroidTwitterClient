@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.psapp.worldcupapp.adapters.EventAdapter;
+import com.psapp.worldcupapp.client.FootballClient;
 import com.psapp.worldcupapp.models.Events;
 import com.psapp.worldcupapp.models.Match;
 
@@ -47,7 +48,7 @@ public class DetailActivity extends Activity {
 				r.getHomeScore(), r.getAwayScore());
 
 		matchId = r.getId();
-		updateHeader(caller);
+		updateHeader(r);
 
 		ArrayList<Events> e = new ArrayList<Events>();
 		e = loadEvents(r);
@@ -55,7 +56,7 @@ public class DetailActivity extends Activity {
 		displayEvents(e);
 	}
 
-	private void updateHeader(String c) {
+	private void updateHeader(Match r) {
 		TextView tvMore = (TextView) findViewById(R.id.tvMore);
 		tvMore.setVisibility(View.INVISIBLE);
 
@@ -79,10 +80,7 @@ public class DetailActivity extends Activity {
 
 		TextView group = (TextView) findViewById(R.id.tvGroup);
 		group.setText(r.getGroup());
-		if(r.getGroup() != ""){
-			Log.d("DEBUG", "Hi  " +r.getLiveTime());
-		}
-
+		
 		ImageView ivDot = (ImageView) findViewById(R.id.ivDot);
 		ivDot.setVisibility(View.GONE);
 		
@@ -178,7 +176,7 @@ public class DetailActivity extends Activity {
 
 	private void fetchLiveUpdates() {
 		final JSONArray liveJson = new JSONArray();
-		String url = URL + "/livescores/" + matchId + ".json";
+		String url = URL + FootballClient.LIVE_URL + "/" + matchId + ".json";
 		client.get(url, new AsyncHttpResponseHandler() {
 
 			public void onSuccess(String json) {
@@ -195,16 +193,16 @@ public class DetailActivity extends Activity {
 						// matches.size() );
 
 						for (Match m : matches) {
-							r = m;
-							setupActionBar(r.getHomeTeam(), r.getAwayTeam(),
-									r.getDate(), r.getHomeScore(),
-									r.getAwayScore());
+							setupActionBar(m.getHomeTeam(), m.getAwayTeam(),
+									m.getDate(), m.getHomeScore(),
+									m.getAwayScore());
+							updateHeader(m);
 
 						}
 						if (r != null) {
 							ArrayList<Events> e = new ArrayList<Events>();
-							e = loadEvents(r);
-							displayEvents(e);
+//							e = loadEvents(r);
+//							displayEvents(e);
 						}
 
 					} catch (Exception e) {

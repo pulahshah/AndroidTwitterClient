@@ -34,6 +34,7 @@ import com.psapp.worldcupapp.MainActivity;
 import com.psapp.worldcupapp.NetworkChecker;
 import com.psapp.worldcupapp.R;
 import com.psapp.worldcupapp.adapters.LiveAdapter;
+import com.psapp.worldcupapp.client.FootballClient;
 import com.psapp.worldcupapp.models.Match;
 
 import de.keyboardsurfer.android.widget.crouton.Configuration;
@@ -140,10 +141,9 @@ public class LiveScoreFragment extends Fragment {
 	}
 
 	public static void getLiveScores() {
-		Log.d("DEBUG", "Get live scores called _____________");
 		fixturesJson = new JSONArray();
 		matches = new ArrayList<Match>();
-		String url = URL + "/livescorestemp.json";
+		String url = URL + FootballClient.LIVE_URL + ".json";
 		client.get(url, new AsyncHttpResponseHandler() {
 
 			public void onSuccess(String json) {
