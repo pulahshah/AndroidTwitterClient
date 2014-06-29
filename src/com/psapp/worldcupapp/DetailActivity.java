@@ -87,8 +87,10 @@ public class DetailActivity extends Activity {
 		TextView tvLiveTime = (TextView) findViewById(R.id.tvLiveTime);
 		String tmp = r.getLiveTime();
 
-		if (tmp.equalsIgnoreCase("finished") || tmp.equals("")) {
+		if (tmp.equalsIgnoreCase("finished") || tmp.equals("") || tmp.equalsIgnoreCase("finished ap")) {
 			tmp = PrettyDate.getPrettyDate(r.getDate());
+		} else if (tmp.equalsIgnoreCase("penalty")) {
+			tmp = "Penalties";
 		} else if (tmp.equalsIgnoreCase("not started")
 				|| tmp.equalsIgnoreCase("notstarted")) {
 			tmp = PrettyDate.getPrettyTime(r.getDate(), true);
@@ -98,7 +100,9 @@ public class DetailActivity extends Activity {
 			ivDot.setVisibility(View.VISIBLE);
 		} else {
 			// increase size to display live time
-			tvLiveTime.setTextSize(20);
+			if(tmp.length() <= 3){
+				tvLiveTime.setTextSize(20);
+			}
 			ivDot.setVisibility(View.VISIBLE);
 		}
 		tvLiveTime.setText(tmp);

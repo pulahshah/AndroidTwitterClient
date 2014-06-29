@@ -18,6 +18,8 @@
             android:gravity="right"
             android:layout_gravity="center_vertical"
             android:fontFamily="sans-serif-light"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:textSize="18sp" />
 
         <ImageView

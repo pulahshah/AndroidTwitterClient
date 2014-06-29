@@ -24,7 +24,7 @@ public class Match implements Serializable, Comparable<Match> {
 	private static final long serialVersionUID = 1L;
 
 	private String id;
-	
+
 	private String homeTeam;
 	private String awayTeam;
 	private String homeScore;
@@ -77,7 +77,8 @@ public class Match implements Serializable, Comparable<Match> {
 		this.date = "";
 		this.liveTime = "";
 
-		this.eventMap = new TreeMap<Integer, ArrayList<String[]>>(Collections.reverseOrder());
+		this.eventMap = new TreeMap<Integer, ArrayList<String[]>>(
+				Collections.reverseOrder());
 	}
 
 	public static Match fromJson(JSONObject jsonObject) {
@@ -86,7 +87,7 @@ public class Match implements Serializable, Comparable<Match> {
 			if (jsonObject.has("id")) {
 				match.id = jsonObject.getString("id");
 			}
-			
+
 			if (jsonObject.has("hometeam")) {
 				match.homeTeam = jsonObject.getString("hometeam");
 			}
@@ -144,8 +145,36 @@ public class Match implements Serializable, Comparable<Match> {
 					}
 
 					if (tuple[1].contains("penalty")) {
-						tuple[1] = full.replaceFirst("penalty", "").trim();
-						tuple[1] = tuple[1] + " (Penalty)";
+						Log.d("DEBUG", "----------------------------------------");
+						Log.d("DEBUG", "1 " + tuple[1].toString());
+						
+						
+						if (tuple[1].contains("shootout")) {
+							tuple[1] = tuple[1].replaceFirst("shootout", "").trim();
+							Log.d("DEBUG", "3 " + tuple[1].toString());
+							
+							if(tuple[1].contains("missed")){
+								tuple[1] = tuple[1].replaceFirst("missed", "").trim();
+								tuple[0] = "penalty_missed";
+								tuple[1] = tuple[1].replaceFirst("penalty", "").trim();
+								tuple[1] = tuple[1] + " (penalty missed)";
+								Log.d("DEBUG", "2 " + tuple[1].toString());
+							}
+							else if(tuple[1].contains("scored")){
+								tuple[1] = tuple[1].replaceFirst("scored", "").trim();
+								tuple[0] = "penalty_scored";
+								tuple[1] = tuple[1].replaceFirst("penalty", "").trim();
+								tuple[1] = tuple[1] + " (penalty)";
+								Log.d("DEBUG", "2 " + tuple[1].toString());
+							}
+							Log.d("DEBUG", "4 " + tuple[1].toString());
+						}
+						else{
+							tuple[1] = tuple[1].replaceFirst("penalty", "").trim();
+							tuple[1] = tuple[1] + " (penalty)";
+							Log.d("DEBUG", "2 " + tuple[1].toString());
+						}
+						
 					}
 
 					ArrayList<String[]> temp;
@@ -182,8 +211,36 @@ public class Match implements Serializable, Comparable<Match> {
 					}
 
 					if (tuple[1].contains("penalty")) {
-						tuple[1] = full.replaceFirst("penalty", "").trim();
-						tuple[1] = tuple[1] + " (Penalty)";
+						Log.d("DEBUG", "----------------------------------------");
+						Log.d("DEBUG", "1 " + tuple[1].toString());
+						
+						
+						if (tuple[1].contains("shootout")) {
+							tuple[1] = tuple[1].replaceFirst("shootout", "").trim();
+							Log.d("DEBUG", "3 " + tuple[1].toString());
+							
+							if(tuple[1].contains("missed")){
+								tuple[1] = tuple[1].replaceFirst("missed", "").trim();
+								tuple[0] = "penalty_missed";
+								tuple[1] = tuple[1].replaceFirst("penalty", "").trim();
+								tuple[1] = tuple[1] + " (penalty missed)";
+								Log.d("DEBUG", "2 " + tuple[1].toString());
+							}
+							else if(tuple[1].contains("scored")){
+								tuple[1] = tuple[1].replaceFirst("scored", "").trim();
+								tuple[0] = "penalty_scored";
+								tuple[1] = tuple[1].replaceFirst("penalty", "").trim();
+								tuple[1] = tuple[1] + " (penalty)";
+								Log.d("DEBUG", "2 " + tuple[1].toString());
+							}
+							Log.d("DEBUG", "4 " + tuple[1].toString());
+						}
+						else{
+							tuple[1] = tuple[1].replaceFirst("penalty", "").trim();
+							tuple[1] = tuple[1] + " (penalty)";
+							Log.d("DEBUG", "2 " + tuple[1].toString());
+						}
+						
 					}
 
 					ArrayList<String[]> temp;
@@ -387,8 +444,7 @@ public class Match implements Serializable, Comparable<Match> {
 					.fromJson(matchJson);
 
 			if (match != null) {
-				if (caller.equals("fixtures") && 
-						match.getLiveTime().equals("") ) {
+				if (caller.equals("fixtures") && match.getLiveTime().equals("")) {
 					// fixture
 					String date = match.getDate();
 					if (!date.equals("")) {
@@ -406,11 +462,10 @@ public class Match implements Serializable, Comparable<Match> {
 							matches.add(match);
 						}
 					}
-				} 
-				else if(caller.equals("fixtures") && match.getLiveTime().equalsIgnoreCase("not started")){
-					
-				}
-				else { // add all other matches (live and results)
+				} else if (caller.equals("fixtures")
+						&& match.getLiveTime().equalsIgnoreCase("not started")) {
+
+				} else { // add all other matches (live and results)
 					matches.add(match);
 				}
 			}
