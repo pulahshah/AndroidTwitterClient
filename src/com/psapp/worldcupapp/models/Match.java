@@ -470,7 +470,6 @@ public class Match implements Serializable, Comparable<Match> {
 				}
 			}
 		}
-
 		return matches;
 	}
 
