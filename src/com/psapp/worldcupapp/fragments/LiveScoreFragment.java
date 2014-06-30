@@ -12,7 +12,6 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -24,7 +23,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -176,6 +177,16 @@ public class LiveScoreFragment extends Fragment {
 	}
 
 	public void displayMatches(ArrayList<Match> matches) {
+		matches = new ArrayList<Match>(); //TODO: delete
+		if(matches.size() > 0){
+			LinearLayout llNoMatches = (LinearLayout) getActivity().findViewById(R.id.llNoMatch);
+			llNoMatches.setVisibility(View.GONE);
+		}
+		else{
+			TextView tvNoMatches = (TextView) getActivity().findViewById(R.id.tvNoMatches);
+			tvNoMatches.setText("No live matches :(");
+		}
+		
 		if (lsf != null && !(lsf.isDetached() || lsf.isRemoving())) {
 			Activity ac = (MainActivity) getActivity();
 			if (ac != null && !ac.isFinishing()) {

@@ -15,6 +15,31 @@
         >
     </ListView>
     
+    <LinearLayout 
+        android:id="@+id/llNoMatch"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_gravity="center" 
+        android:gravity="center">
+        
+        <ImageView 
+        android:background="@drawable/ic_football_256"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center" />
+    
+    <TextView 
+        android:id="@+id/tvNoMatches"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif"
+        android:textColor="#BFBFBF"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:paddingTop="10dp"
+        android:text="Loading matches..."/>
+    </LinearLayout>
     
 </LinearLayout>
 

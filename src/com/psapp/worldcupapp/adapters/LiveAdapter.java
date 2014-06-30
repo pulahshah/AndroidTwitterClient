@@ -1,7 +1,7 @@
 package com.psapp.worldcupapp.adapters;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.TimeZone;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -13,7 +13,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.activeandroid.util.Log;
 import com.psapp.worldcupapp.PrettyDate;
 import com.psapp.worldcupapp.R;
 import com.psapp.worldcupapp.Utilities;
@@ -21,21 +20,22 @@ import com.psapp.worldcupapp.models.Match;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class LiveAdapter extends ArrayAdapter<Match> {
+	List<Match> scores = new ArrayList<Match>();
+	
 	public LiveAdapter(Context context, List<Match> scores) {
 		super(context, 0, scores);
+		this.scores = scores;
 	}
 
 	@Override
 	public View getView(int position, View view, ViewGroup parent) {
-		// View view = convertView;
 		view = null;
-		
-		
 		final Match score = getItem(position);
 
 		if (view == null) {
 			LayoutInflater inflater = (LayoutInflater) getContext()
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			
 			if (score.getLiveTime().equals("")) { // fixture
 				view = inflater.inflate(R.layout.item_score, null);
 

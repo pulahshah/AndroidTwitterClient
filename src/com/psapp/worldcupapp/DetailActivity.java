@@ -196,18 +196,16 @@ public class DetailActivity extends Activity {
 									m.getAwayScore());
 							updateHeader(m);
 
-							ArrayList<Events> e = new ArrayList<Events>();
+//							ArrayList<Events> e = new ArrayList<Events>();
 //							e = loadEvents(m);
 //							displayEvents(e);
 						}
-						
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
 				} else {
 					Log.d("DEBUG", "No live matches");
 				}
-
 			}
 
 			@Override
