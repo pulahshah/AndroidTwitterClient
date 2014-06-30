@@ -2,8 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical" >
 
     <ListView
         android:id="@+id/lvLiveScore"
@@ -11,36 +10,34 @@
         android:layout_height="wrap_content"
         android:cacheColorHint="#00000000"
         android:divider="@null"
-		android:dividerHeight="0dp"
-        >
+        android:dividerHeight="0dp" >
     </ListView>
-    
-    <LinearLayout 
+
+    <LinearLayout
         android:id="@+id/llNoMatch"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_gravity="center" 
-        android:gravity="center">
-        
-        <ImageView 
-        android:background="@drawable/ic_football_256"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center" />
-    
-    <TextView 
-        android:id="@+id/tvNoMatches"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="sans-serif"
-        android:textColor="#BFBFBF"
+        android:layout_gravity="center"
         android:gravity="center"
-        android:textSize="20sp"
-        android:paddingTop="10dp"
-        android:text="Loading matches..."/>
+        android:orientation="vertical" >
+
+        <ImageView
+            android:id="@+id/ivNoMatches"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_football_256"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/tvNoMatches"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:paddingTop="10dp"
+            android:text="Loading matches..."
+            android:textColor="#BFBFBF"
+            android:textSize="20sp" />
     </LinearLayout>
-    
+
 </LinearLayout>
-
-

@@ -50,7 +50,6 @@ public class NewsFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceBundle) {
 		View view = inflater.inflate(R.layout.fragment_news, container, false);
-		setHasOptionsMenu(true);
 		return view;
 	}
 
@@ -72,7 +71,7 @@ public class NewsFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 		page = getArguments().getInt("someInt", 3);
 		title = getArguments().getString("someTitle");
-
+		setHasOptionsMenu(true);
 //		Log.d("DEBUG", "news --- onCreate");
 	}
 	

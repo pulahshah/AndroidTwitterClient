@@ -21,8 +21,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -53,12 +57,12 @@ public class LiveScoreFragment extends Fragment {
 	static LiveScoreFragment lsf;
 	long currTime;
 	long prevTime;
+	ImageView ivNoMatches;
 	
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceBundle) {
 		View view = inflater.inflate(R.layout.fragment_live, container, false);
-		setHasOptionsMenu(true);
 		return view;
 	}
 
@@ -110,6 +114,7 @@ public class LiveScoreFragment extends Fragment {
 		Log.d("DEBUG", "LF onResume");
 		super.onResume();
 		if (NetworkChecker.checkConnection(getActivity())) {
+//			startAnimation();
 			getLiveScores();
 			NetworkChecker.hideCrouton();
 		} else {
@@ -175,46 +180,45 @@ public class LiveScoreFragment extends Fragment {
 			}
 		});
 	}
-
-	public void displayMatches(ArrayList<Match> matches) {
-		matches = new ArrayList<Match>(); //TODO: delete
+	
+		public void displayMatches(ArrayList<Match> matches) {
 		if(matches.size() > 0){
 			LinearLayout llNoMatches = (LinearLayout) getActivity().findViewById(R.id.llNoMatch);
 			llNoMatches.setVisibility(View.GONE);
+			
+			if (lsf != null && !(lsf.isDetached() || lsf.isRemoving())) {
+				Activity ac = (MainActivity) getActivity();
+				if (ac != null && !ac.isFinishing()) {
+					final ListView lvLiveScores = (ListView) ac.findViewById(R.id.lvLiveScore);
+					Parcelable state = lvLiveScores.onSaveInstanceState();
+					liveAdapter = new LiveAdapter(ac, matches);
+					lvLiveScores.setAdapter(liveAdapter);
+					liveAdapter.notifyDataSetChanged();
+					lvLiveScores.onRestoreInstanceState(state);
+					lvLiveScores.setOnItemClickListener(new OnItemClickListener() {
+						@Override
+						public void onItemClick(AdapterView<?> parent, View view,
+								int position, long id) {
+
+							Match f = (Match) lvLiveScores
+									.getItemAtPosition(position);
+							if (f.getLiveTime().equals("")) {
+
+							} else {
+								Intent intent = new Intent(getActivity(),
+										DetailActivity.class);
+								intent.putExtra("temp", f);
+								intent.putExtra("caller", "live");
+								startActivity(intent);
+							}
+						}
+					});
+				}
+			}
 		}
 		else{
 			TextView tvNoMatches = (TextView) getActivity().findViewById(R.id.tvNoMatches);
 			tvNoMatches.setText("No live matches :(");
-		}
-		
-		if (lsf != null && !(lsf.isDetached() || lsf.isRemoving())) {
-			Activity ac = (MainActivity) getActivity();
-			if (ac != null && !ac.isFinishing()) {
-				final ListView lvLiveScores = (ListView) ac.findViewById(R.id.lvLiveScore);
-				Parcelable state = lvLiveScores.onSaveInstanceState();
-				liveAdapter = new LiveAdapter(ac, matches);
-				lvLiveScores.setAdapter(liveAdapter);
-				liveAdapter.notifyDataSetChanged();
-				lvLiveScores.onRestoreInstanceState(state);
-				lvLiveScores.setOnItemClickListener(new OnItemClickListener() {
-					@Override
-					public void onItemClick(AdapterView<?> parent, View view,
-							int position, long id) {
-
-						Match f = (Match) lvLiveScores
-								.getItemAtPosition(position);
-						if (f.getLiveTime().equals("")) {
-
-						} else {
-							Intent intent = new Intent(getActivity(),
-									DetailActivity.class);
-							intent.putExtra("temp", f);
-							intent.putExtra("caller", "live");
-							startActivity(intent);
-						}
-					}
-				});
-			}
 		}
 	}
 
@@ -224,8 +228,6 @@ public class LiveScoreFragment extends Fragment {
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 
-	
-	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection

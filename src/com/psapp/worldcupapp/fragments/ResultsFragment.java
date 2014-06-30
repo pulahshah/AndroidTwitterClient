@@ -56,9 +56,7 @@ public class ResultsFragment extends Fragment {
 			Bundle savedInstanceBundle) {
 		View view = inflater.inflate(R.layout.fragment_results, container,
 				false);
-		setHasOptionsMenu(true);
-
-		return view;
+				return view;
 	}
 
 	public static ResultsFragment newInstance(int page, String title) {
@@ -79,6 +77,7 @@ public class ResultsFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 		page = getArguments().getInt("someInt", 2);
 		title = getArguments().getString("someTitle");
+		setHasOptionsMenu(true);
 	}
 
 	private Crouton crouton;

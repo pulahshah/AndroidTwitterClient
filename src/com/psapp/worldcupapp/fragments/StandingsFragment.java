@@ -55,7 +55,6 @@ public class StandingsFragment extends Fragment {
 			Bundle savedInstanceBundle) {
 		View view = inflater.inflate(R.layout.fragment_standings, container,
 				false);
-		setHasOptionsMenu(true);
 		return view;
 	}
 
@@ -78,7 +77,7 @@ public class StandingsFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 		page = getArguments().getInt("someInt", 2);
 		title = getArguments().getString("someTitle");
-		// Log.d("DEBUG", "standings --- onCreate");
+		setHasOptionsMenu(true);
 	}
 
 	private Crouton crouton;
