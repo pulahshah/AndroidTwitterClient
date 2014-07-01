@@ -122,9 +122,8 @@ public class Match implements Serializable, Comparable<Match> {
 			}
 
 			if (jsonObject.has("homegoaldetails")) {
-
 				String tmp = jsonObject.getString("homegoaldetails");
-
+				Log.d("DEBUG", "Goal: " + tmp);
 				String[] homeGoalBits = tmp.split(";");
 
 				for (int i = 0; i < homeGoalBits.length; i++) {
@@ -192,6 +191,7 @@ public class Match implements Serializable, Comparable<Match> {
 
 			if (jsonObject.has("awaygoaldetails")) {
 				String tmp = jsonObject.getString("awaygoaldetails");
+				Log.d("DEBUG", "Goal: " + tmp);
 				String[] awayGoalBits = tmp.split(";");
 
 				for (int i = 0; i < awayGoalBits.length; i++) {
