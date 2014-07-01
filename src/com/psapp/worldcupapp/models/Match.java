@@ -131,46 +131,51 @@ public class Match implements Serializable, Comparable<Match> {
 					String[] etemp = homeGoalBits[i].split(":");
 					String[] tuple = new String[4];
 					int min = Integer.parseInt(etemp[0].trim().split("'")[0]);
-					tuple[2] = min + "";
-					tuple[1] = etemp[1].trim();
-					tuple[0] = "goal";
-					tuple[3] = "home";
+					tuple[2] = min + ""; // time
+					tuple[1] = etemp[1].trim(); // player name
+					tuple[0] = "goal"; // event type
+					tuple[3] = "home"; // side
 
-					String full = tuple[1].toString();
 					String a = tuple[1].toString().substring(0, 3)
 							.toLowerCase();
+					// to check for own goal -- taking first 4 chars as player
+					// name can contain 'own'
+					// own Goal
 					if (a.contains("own")) {
-						tuple[1] = full.replaceFirst("Own", "").trim();
+						tuple[1] = tuple[1].replaceFirst("Own", "").trim();
 						tuple[1] = tuple[1] + " (OG)";
 					}
 
+					// penalty
 					if (tuple[1].contains("penalty")) {
-
+						// shoot out
 						if (tuple[1].contains("shootout")) {
 							tuple[1] = tuple[1].replaceFirst("shootout", "")
 									.trim();
-
+							// shoot out penalty missed
 							if (tuple[1].contains("missed")) {
 								tuple[1] = tuple[1].replaceFirst("missed", "")
 										.trim();
 								tuple[0] = "penalty_missed";
 								tuple[1] = tuple[1].replaceFirst("penalty", "")
 										.trim();
-								tuple[1] = tuple[1] + " (penalty missed)";
-							} else if (tuple[1].contains("scored")) {
+								tuple[1] = tuple[1] + " (P)";
+							}
+							// shoot out penalty scored
+							else if (tuple[1].contains("scored")) {
 								tuple[1] = tuple[1].replaceFirst("scored", "")
 										.trim();
 								tuple[0] = "penalty_scored";
 								tuple[1] = tuple[1].replaceFirst("penalty", "")
 										.trim();
-								tuple[1] = tuple[1] + " (penalty)";
+								tuple[1] = tuple[1] + " (P)";
 							}
-						} else {
-							tuple[1] = tuple[1].replaceFirst("penalty", "")
-									.trim();
-							tuple[1] = tuple[1] + " (penalty)";
+						} 
+						// normal penalty
+						else {
+							tuple[1] = tuple[1].replaceFirst("penalty", "").trim();
+							tuple[1] = tuple[1] + " (P)";
 						}
-
 					}
 
 					ArrayList<String[]> temp;
@@ -198,39 +203,36 @@ public class Match implements Serializable, Comparable<Match> {
 					tuple[0] = "goal";
 					tuple[3] = "away";
 
-					String full = tuple[1].toString();
 					String a = tuple[1].toString().substring(0, 3)
 							.toLowerCase();
 					if (a.contains("own")) {
-						tuple[1] = full.replaceFirst("Own", "").trim();
+						tuple[1] = tuple[1].replaceFirst("Own", "").trim();
 						tuple[1] = tuple[1] + " (OG)";
 					}
 
 					if (tuple[1].contains("penalty")) {
-
 						if (tuple[1].contains("shootout")) {
 							tuple[1] = tuple[1].replaceFirst("shootout", "")
 									.trim();
-
 							if (tuple[1].contains("missed")) {
 								tuple[1] = tuple[1].replaceFirst("missed", "")
 										.trim();
 								tuple[0] = "penalty_missed";
 								tuple[1] = tuple[1].replaceFirst("penalty", "")
 										.trim();
-								tuple[1] = tuple[1] + " (penalty missed)";
+								tuple[1] = tuple[1] + " (P)";
 							} else if (tuple[1].contains("scored")) {
 								tuple[1] = tuple[1].replaceFirst("scored", "")
 										.trim();
 								tuple[0] = "penalty_scored";
 								tuple[1] = tuple[1].replaceFirst("penalty", "")
 										.trim();
-								tuple[1] = tuple[1] + " (penalty)";
+								tuple[1] = tuple[1] + " (P)";
 							}
 						} else {
 							tuple[1] = tuple[1].replaceFirst("penalty", "")
 									.trim();
-							tuple[1] = tuple[1] + " (penalty)";
+							tuple[1] = tuple[1] + " (P)";
 						}
 
 					}
@@ -238,7 +240,6 @@ public class Match implements Serializable, Comparable<Match> {
 					ArrayList<String[]> temp;
 					if (match.eventMap.containsKey(min)) {
 						temp = match.eventMap.get(min);
-
 					} else {
 						temp = new ArrayList<String[]>();
 					}

@@ -58,8 +58,6 @@ public class EventAdapter extends ArrayAdapter<Events> {
 					.findViewById(R.id.tvEventName);
 			tvEventName.setText(e.getName());
 		}
-
 		return view;
 	}
-
 }

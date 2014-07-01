@@ -49,6 +49,8 @@ public class StandingsFragment extends Fragment {
 	long currTime;
 	long prevTime;
 
+	long debug_start;
+	
 	TreeMap<Integer, ArrayList<Standing>> map;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -108,6 +110,7 @@ public class StandingsFragment extends Fragment {
 	public void onResume() {
 		super.onResume();
 		if (NetworkChecker.checkConnection(getActivity())) {
+			debug_start = System.currentTimeMillis();
 			getStandings();
 			NetworkChecker.hideCrouton();
 		} else {
@@ -170,6 +173,8 @@ public class StandingsFragment extends Fragment {
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
+				Log.d("DEBUG", "Standings Time: " + (System.currentTimeMillis() - debug_start) + "");
+				debug_start = System.currentTimeMillis();
 			}
 
 			@Override

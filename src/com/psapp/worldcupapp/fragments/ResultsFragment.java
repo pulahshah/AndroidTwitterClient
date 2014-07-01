@@ -51,6 +51,8 @@ public class ResultsFragment extends Fragment {
 	static ResultsFragment rf;
 	long currTime;
 	long prevTime;
+	
+	long debug_start;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceBundle) {
@@ -122,6 +124,7 @@ public class ResultsFragment extends Fragment {
 	}
 
 	public void getResults(String caller) {
+		debug_start = System.currentTimeMillis();
 		makeCall();
 	}
 
@@ -181,6 +184,8 @@ public class ResultsFragment extends Fragment {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				Log.d("DEBUG", "Results Time: " + (System.currentTimeMillis() - debug_start) + "");
+				debug_start = System.currentTimeMillis();
 			}
 
 			@Override

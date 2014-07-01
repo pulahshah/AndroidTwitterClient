@@ -87,7 +87,9 @@ public class DetailActivity extends Activity {
 		TextView tvLiveTime = (TextView) findViewById(R.id.tvLiveTime);
 		String tmp = r.getLiveTime();
 
-		if (tmp.equalsIgnoreCase("finished") || tmp.equals("") || tmp.equalsIgnoreCase("finished ap")) {
+		if (tmp.equalsIgnoreCase("finished") || tmp.equals("") 
+				|| tmp.equalsIgnoreCase("finished ap")
+				|| tmp.equalsIgnoreCase("finished aet")) {
 			tmp = PrettyDate.getPrettyDate(r.getDate());
 		} else if (tmp.equalsIgnoreCase("penalty")) {
 			tmp = "Penalties";
@@ -130,7 +132,6 @@ public class DetailActivity extends Activity {
 				e.setSide(tuple[3]);
 				e.setMatch(r);
 				events.add(e);
-
 			}
 		}
 		return events;
@@ -184,9 +185,7 @@ public class DetailActivity extends Activity {
 					try {
 
 						JSONObject obj = new JSONObject(json);
-
 						liveJson.put(obj);
-
 						ArrayList<Match> matches = Match.fromJson(liveJson,
 								"live");
 

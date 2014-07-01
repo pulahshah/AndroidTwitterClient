@@ -59,6 +59,9 @@ public class LiveScoreFragment extends Fragment {
 	long prevTime;
 	ImageView ivNoMatches;
 	
+	long debug_start;
+	
+	
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceBundle) {
@@ -115,6 +118,7 @@ public class LiveScoreFragment extends Fragment {
 		super.onResume();
 		if (NetworkChecker.checkConnection(getActivity())) {
 //			startAnimation();
+			debug_start = System.currentTimeMillis();
 			getLiveScores();
 			NetworkChecker.hideCrouton();
 		} else {
@@ -182,6 +186,7 @@ public class LiveScoreFragment extends Fragment {
 	}
 	
 		public void displayMatches(ArrayList<Match> matches) {
+			Log.d("DEBUG", "display matches called -----------");
 		if(matches.size() > 0){
 			LinearLayout llNoMatches = (LinearLayout) getActivity().findViewById(R.id.llNoMatch);
 			llNoMatches.setVisibility(View.GONE);
@@ -220,6 +225,8 @@ public class LiveScoreFragment extends Fragment {
 			TextView tvNoMatches = (TextView) getActivity().findViewById(R.id.tvNoMatches);
 			tvNoMatches.setText("No live matches :(");
 		}
+		Log.d("DEBUG", "Live Time: " + (System.currentTimeMillis() - debug_start) + "");
+		debug_start = System.currentTimeMillis();
 	}
 
 	@Override
